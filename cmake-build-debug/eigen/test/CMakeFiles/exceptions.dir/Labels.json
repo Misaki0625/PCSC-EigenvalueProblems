@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen/test/exceptions.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"BuildOfficial"
+		],
+		"name" : "exceptions"
+	}
+}

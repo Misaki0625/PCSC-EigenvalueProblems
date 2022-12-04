@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen/test/bfloat16_float.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"BuildOfficial"
+		],
+		"name" : "bfloat16_float"
+	}
+}
