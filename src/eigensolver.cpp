@@ -137,7 +137,7 @@ int main() {
     MatrixXd matrix(3, 3);
     matrix << 1, 2, 3,
             4, 5, 6,
-            7, 8, 9;
+            7, 8, 10;
     VectorXcd eigenvaluestrue = matrix.eigenvalues();
     // Create an instance of each eigenvalue calculation method
     PowerMethod powerMethod;
