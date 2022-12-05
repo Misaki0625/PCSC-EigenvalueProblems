@@ -18,6 +18,11 @@ include_directories(eigen)
 add_executable(main src/main.cpp)
 target_link_libraries(main pcsc)
 
+add_executable(QR src/QRMethod.cpp)
+add_executable(try src/try.cpp)
+add_executable(eigensolver src/eigensolver.cpp)
+add_executable(power src/PowerMethod.cpp)
+
 add_executable(readfile src/ReadFiles.cpp)
 
 add_executable(test_pcsc test/test.cc)

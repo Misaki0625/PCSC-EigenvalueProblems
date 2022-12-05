@@ -1,5 +1,9 @@
 /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug/CMakeFiles/pcsc.dir
 /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug/CMakeFiles/main.dir
+/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug/CMakeFiles/QR.dir
+/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug/CMakeFiles/try.dir
+/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug/CMakeFiles/eigensolver.dir
+/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug/CMakeFiles/power.dir
 /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug/CMakeFiles/readfile.dir
 /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug/CMakeFiles/test_pcsc.dir
 /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug/CMakeFiles/test.dir

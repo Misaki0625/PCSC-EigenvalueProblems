@@ -104,6 +104,134 @@ build main: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/src/main.cpp.o
   TARGET_PDB = main.dbg
 
 # =============================================================================
+# Object build statements for EXECUTABLE target QR
+
+
+#############################################
+# Order-only phony target for QR
+
+build cmake_object_order_depends_target_QR: phony || CMakeFiles/QR.dir
+
+build CMakeFiles/QR.dir/src/QRMethod.cpp.o: CXX_COMPILER__QR_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/QRMethod.cpp || cmake_object_order_depends_target_QR
+  DEP_FILE = CMakeFiles/QR.dir/src/QRMethod.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/QR.dir
+  OBJECT_FILE_DIR = CMakeFiles/QR.dir/src
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target QR
+
+
+#############################################
+# Link the executable QR
+
+build QR: CXX_EXECUTABLE_LINKER__QR_Debug CMakeFiles/QR.dir/src/QRMethod.cpp.o
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2
+  OBJECT_DIR = CMakeFiles/QR.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = QR
+  TARGET_PDB = QR.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target try
+
+
+#############################################
+# Order-only phony target for try
+
+build cmake_object_order_depends_target_try: phony || CMakeFiles/try.dir
+
+build CMakeFiles/try.dir/src/try.cpp.o: CXX_COMPILER__try_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/try.cpp || cmake_object_order_depends_target_try
+  DEP_FILE = CMakeFiles/try.dir/src/try.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/try.dir
+  OBJECT_FILE_DIR = CMakeFiles/try.dir/src
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target try
+
+
+#############################################
+# Link the executable try
+
+build try: CXX_EXECUTABLE_LINKER__try_Debug CMakeFiles/try.dir/src/try.cpp.o
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2
+  OBJECT_DIR = CMakeFiles/try.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = try
+  TARGET_PDB = try.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target eigensolver
+
+
+#############################################
+# Order-only phony target for eigensolver
+
+build cmake_object_order_depends_target_eigensolver: phony || CMakeFiles/eigensolver.dir
+
+build CMakeFiles/eigensolver.dir/src/eigensolver.cpp.o: CXX_COMPILER__eigensolver_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/eigensolver.cpp || cmake_object_order_depends_target_eigensolver
+  DEP_FILE = CMakeFiles/eigensolver.dir/src/eigensolver.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/eigensolver.dir
+  OBJECT_FILE_DIR = CMakeFiles/eigensolver.dir/src
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target eigensolver
+
+
+#############################################
+# Link the executable eigensolver
+
+build eigensolver: CXX_EXECUTABLE_LINKER__eigensolver_Debug CMakeFiles/eigensolver.dir/src/eigensolver.cpp.o
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2
+  OBJECT_DIR = CMakeFiles/eigensolver.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = eigensolver
+  TARGET_PDB = eigensolver.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target power
+
+
+#############################################
+# Order-only phony target for power
+
+build cmake_object_order_depends_target_power: phony || CMakeFiles/power.dir
+
+build CMakeFiles/power.dir/src/PowerMethod.cpp.o: CXX_COMPILER__power_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/PowerMethod.cpp || cmake_object_order_depends_target_power
+  DEP_FILE = CMakeFiles/power.dir/src/PowerMethod.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/power.dir
+  OBJECT_FILE_DIR = CMakeFiles/power.dir/src
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target power
+
+
+#############################################
+# Link the executable power
+
+build power: CXX_EXECUTABLE_LINKER__power_Debug CMakeFiles/power.dir/src/PowerMethod.cpp.o
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2
+  OBJECT_DIR = CMakeFiles/power.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = power
+  TARGET_PDB = power.dbg
+
+# =============================================================================
 # Object build statements for EXECUTABLE target readfile
 
 
@@ -617,7 +745,7 @@ build pcsc: phony libpcsc.a
 #############################################
 # Folder: /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug
 
-build all: phony libpcsc.a main readfile test_pcsc googletest/all
+build all: phony libpcsc.a main QR try eigensolver power readfile test_pcsc googletest/all
 
 # =============================================================================
 
