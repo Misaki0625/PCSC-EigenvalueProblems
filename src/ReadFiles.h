@@ -9,6 +9,7 @@
 #include <string>
 #include <Eigen/Dense>
 #include <vector>
+#include <sys/stat.h>
 
 // Base class for file readers
 class FileReader {
@@ -63,7 +64,7 @@ public:
     }
 };
 
-// TXT file reader class
+// Binary file reader class
 class BinaryReader : public FileReader {
 public:
     Eigen::MatrixXd read(const std::string &filename) override {
@@ -71,13 +72,21 @@ public:
         std::ifstream file(filename, std::ios::binary);
         if (!file.is_open()) {
             std::cerr << "Error: Could not open file " << filename << "!" << std::endl;
+            return {}; // to modify
+        }
+        struct stat stat_buf{};
+        int rc = stat(filename.c_str(), &stat_buf);
+        if (rc!=0){
+            std::cerr << "Error: Could not read the stat of " << filename << "!" << std::endl;
             return {};
         }
-        int num_elems = 0;
-        double elem;
-        while (file.read((char *) &elem, sizeof(double))) {
-            num_elems++;
-        }
+        auto num_elems = stat_buf.st_size / sizeof(double);
+
+        // int num_elems = 0;
+//        double elem;
+//        while (file.read((char *) &elem, sizeof(double))) {
+//            num_elems++;
+//        }
         int rows = (int) sqrt(num_elems);
         int cols = num_elems / rows;
         matrix.resize(rows, cols);
