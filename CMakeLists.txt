@@ -12,16 +12,11 @@ add_library(pcsc
 )
 
 add_subdirectory(googletest)
-add_subdirectory(argparse)
 include_directories(eigen)
-include_directories(SYSTEM /usr/local/include)
-include_directories(argparse)
 # set(FILELIST src/main.cc src/pcsc.cc src/ReadFile.cpp)
 
 add_executable(main src/main.cc)
-target_link_libraries(main -largparse)
-# target_link_libraries(main pcsc)
-# target_link_libraries(main pcsc)
+target_link_libraries(main pcsc)
 
 #add_executable(QR src/QRMethod.cpp)
 #add_executable(try src/try.cpp)
