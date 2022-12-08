@@ -1,2 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/ar qc libpcsc.a CMakeFiles/pcsc.dir/src/pcsc.cc.o
-/Library/Developer/CommandLineTools/usr/bin/ranlib libpcsc.a

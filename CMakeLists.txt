@@ -1,29 +1,24 @@
 
-cmake_minimum_required (VERSION 3.14)
-project (PCSC-project)
+cmake_minimum_required (VERSION 3.0)
 
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
-# find_package(argparse REQUIRED)
+project (PCSC-project)
 
 set(CMAKE_CXX_STANDARD 17)
 
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+
 add_library(pcsc
-  src/pcsc.cc
-)
+        src/pcsc.cc
+        )
 
 add_subdirectory(googletest)
 include_directories(eigen)
-# set(FILELIST src/main.cc src/pcsc.cc src/ReadFile.cpp)
 
 add_executable(main src/main.cc)
 target_link_libraries(main pcsc)
 
-#add_executable(QR src/QRMethod.cpp)
-#add_executable(try src/try.cpp)
-#add_executable(eigensolver src/eigensolver.cpp)
-#add_executable(power src/PowerMethod.cpp)
-#
-#add_executable(readfile src/ReadFiles.cpp)
+add_executable(matrix src/matrix.cpp)
+target_link_libraries(matrix pcsc)
 
 add_executable(test_pcsc test/test.cc)
 target_link_libraries(test_pcsc gtest_main gtest pthread pcsc)

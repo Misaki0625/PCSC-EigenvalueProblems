@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <list>
 #include <Eigen/Dense>
 #include <cmath>
 #include <exception>
@@ -12,6 +13,7 @@
 #include "PowerMethodShifted.h"
 #include "InversePowerMethodShifted.h"
 #include "QRMethod.h"
+#include "PowerMethodAll.h"
 
 
 using namespace std;
@@ -37,6 +39,27 @@ public:
     bool cmdOptionExists(const std::string &option) const{
         return std::find(this->tokens.begin(), this->tokens.end(), option)
                != this->tokens.end();
+    }
+    const std::string& assignCmdOption(const std::string &option, bool optional, const std::string &default_value) const{
+        if(this->cmdOptionExists(option)){
+            // assign the option
+            const std::string &value = this->getCmdOption(option);
+            if (!value.empty()){
+                return value;
+                //cout << "filename:" << file << endl;
+            } else{
+                //cout << "file is empty!" << endl;
+                throw std::invalid_argument( "no value is given for " + option );
+            }
+        } else if(optional){
+            // if the option does not exist, output a message
+            cout << "Option " << option << " does not exist" << endl;
+            cout << "Falling back to the default value: " << default_value << endl;
+            return default_value;
+        } else{
+            cout << "Option" << option << "must be given" << endl;
+            throw std::invalid_argument( "Option " + option + " must be given");
+        }
     }
 private:
     std::vector <std::string> tokens;
@@ -75,18 +98,20 @@ FileReader* createReader(const std::string& file)
 }
 
 //solver function by algorithm and max iteration
-GeneralEigenMethod* createMethod(const std::string& method, double param1, double param2)
+GeneralEigenMethod* createMethod(const std::string& method, double MaxIter, double tol, const std::string& shift)
 {
     if (method == "p") {
-        return new PowerMethod(param1, param2);
+        return new PowerMethod(MaxIter, tol);
     } else if (method == "ip") {
-        return new InversePowerMethod(param1, param2);
+        return new InversePowerMethod(MaxIter, tol);
     } else if (method == "ps") {
-        return new PowerMethodWithShift(param1, param2);
+        return new PowerMethodWithShift(MaxIter, tol, shift);
     } else if (method == "ips") {
-        return new InversePowerMethodWithShift(param1, param2);
+        return new InversePowerMethodWithShift(MaxIter, tol, shift);
     } else if (method == "qr") {
-        return new QRMethod(param1, param2);
+        return new QRMethod(MaxIter, tol);
+    } else if (method == "pa") {
+        return new PowerMethodAll(MaxIter, tol);
     }
     return nullptr;
 }
@@ -114,90 +139,94 @@ void write2csv(const VectorXd& vec, const std::string& filename)
     file.close();
 }
 
+bool in_array(const std::string &value, const std::vector<std::string> &array)
+{
+    return std::find(array.begin(), array.end(), value) != array.end();
+}
 
-int main(int argc, char **argv){
-//    int i;
-//    for (i=0; i<argc;i++){
-//        cout << argv[i] << endl;
-//    }
-//    std::cout << identifyFileType("example.txt") << std::endl;
-//    std::cout << identifyFileType("image.png") << std::endl;
-//    std::cout << identifyFileType("data.csv") << std::endl;
-//    std::cout << identifyFileType("binary.bin") << std::endl;
-//    std::cout << identifyFileType("document") << std::endl;
-//    BinaryReader reader;
-//    reader.read("data.bin");
 
+
+    int main(int argc, char **argv){
     std::string file;
     std::string algo;
-    std::string out;
+    std::string outfile;
+    std::string shift;
     int MaxIter;
+    double tol;
+
     InputParser input(argc, argv);
 
-    // command option: file
-    if(input.cmdOptionExists("-f")){
-        // assign the option
-        const std::string &filename = input.getCmdOption("-f");
-        if (!filename.empty()){
-            file = filename;
-            cout << "filename:" << file << endl;
-        } else{
-            cout << "file is empty!" << endl;
-        }
-    } else{
-        // if the option does not exist, output a message
-        cout << "Option -f does not exist" << endl;
-        return 1;
-    }
-    // command option: algorithm
-    if(input.cmdOptionExists("-algo")){
-        // assign the option
-        const std::string &algorithm = input.getCmdOption("-algo");
-        if (!algorithm.empty()){
-            algo = algorithm;
-            cout << "algorithm:" << algo << endl;
-        } else{
-            cerr << "Option -algo is empty" << endl;
-            return 1;
-        }
-    } else{
-        // if the option does not exist, output a message
-        cout << "Option -algo does not exist" << endl;
-        cout << "Falling back to the default value: qr" << endl;
-        algo = "qr";
-    }
+    file = input.assignCmdOption("-f", false, "");
+    algo = input.assignCmdOption("-algo", true, "qr");
+    outfile = input.assignCmdOption("-o", true, "output.csv");
+    MaxIter = stoi(input.assignCmdOption("-MaxIter", true, "10000"));
+    tol = stod(input.assignCmdOption("-tol", true, "1e-8"));
+    shift = input.assignCmdOption("-shift", true, "default");
 
-    if(input.cmdOptionExists("-MaxIter")){
-        // assign the option
-        const std::string &iteration = input.getCmdOption("-MaxIter");
-        if (!iteration.empty()){
-            MaxIter = stoi(iteration);
-            cout << "max iteration:" << MaxIter << endl;
-        } else{
-            cerr << "Option -MaxIter is empty" << endl;
-            return 1;
-        }
-    } else{
-        // if the option does not exist, output a message
-        cout << "Option -MaxIter does not exist" << endl;
-        cout << "Falling back to the default value: 1000" << endl;
-        MaxIter = 1000;
-    }
 
-    if(input.cmdOptionExists("-o")){
-        // assign the option
-        const std::string &output = input.getCmdOption("-o");
-        if (!output.empty()) {
-            out = output;
-            cout << "output file:" << out << endl;
-        }
-    } else{
-        // if the option does not exist, output a message
-        cout << "No file not provided" << endl;
-        cout << "Print the results to the screen" << endl;
-    }
+//    // command option: file
+//    if(input.cmdOptionExists("-f")){
+//        // assign the option
+//        const std::string &filename = input.getCmdOption("-f");
+//        if (!filename.empty()){
+//            file = filename;
+//            cout << "filename:" << file << endl;
+//        } else{
+//            cout << "file is empty!" << endl;
+//        }
+//    } else{
+//        // if the option does not exist, output a message
+//        cout << "Option -f does not exist" << endl;
+//        return 1;
+//    }
+//    // command option: algorithm
+//    if(input.cmdOptionExists("-algo")){
+//        // assign the option
+//        const std::string &algorithm = input.getCmdOption("-algo");
+//        if (!algorithm.empty()){
+//            algo = algorithm;
+//            cout << "algorithm:" << algo << endl;
+//        } else{
+//            cerr << "Option -algo is empty" << endl;
+//            return 1;
+//        }
+//    } else{
+//        // if the option does not exist, output a message
+//        cout << "Option -algo does not exist" << endl;
+//        cout << "Falling back to the default value: qr" << endl;
+//        algo = "qr";
+//    }
+//
+//    if(input.cmdOptionExists("-MaxIter")){
+//        // assign the option
+//        const std::string &iteration = input.getCmdOption("-MaxIter");
+//        if (!iteration.empty()){
+//            MaxIter = stoi(iteration);
+//            cout << "max iteration:" << MaxIter << endl;
+//        } else{
+//            cerr << "Option -MaxIter is empty" << endl;
+//            return 1;
+//        }
+//    } else{
+//        // if the option does not exist, output a message
+//        cout << "Option -MaxIter does not exist" << endl;
+//        cout << "Falling back to the default value: 10000" << endl;
+//        MaxIter = 10000;
+//    }
+//
+//    if(input.cmdOptionExists("-o")){
+//        // assign the option
+//        const std::string &output = input.getCmdOption("-o");
+//        if (!output.empty()) {
+//            out = output;
+//            cout << "output file:" << out << endl;
+//        }
+//    } else{
+//        // if the option does not exist, output a message
+//        cout << "No file not provided" << endl;
+//        cout << "Print the results to the screen" << endl;
+//    }
 
-    double param2 = 2.1;
     FileReader* reader = createReader(file);
     if (reader == nullptr) {
         std::cout << "Invalid file type" << std::endl;
@@ -205,21 +234,50 @@ int main(int argc, char **argv){
     }
     auto matrix = reader->read(file);
     // test if matrix is read successfully
+    delete reader;
+    reader = nullptr;
     cout << matrix << endl;
 
-    GeneralEigenMethod* solver = createMethod(algo, MaxIter, param2);
+    GeneralEigenMethod* solver = createMethod(algo, MaxIter, tol, shift);
     if (solver == nullptr) {
         std::cout << "Invalid algorithm type" << std::endl;
         return 1;
     }
-    auto output = solver->calculateEigenvalues(matrix);
-    // test if eigenvalues can be returned successfully
-    // cout << output << endl;
 
-    if (!out.empty()){
-        write2csv(output, out);
-    } else {
-        cout << output << endl;
+    // a configuration print need to be written as a function/class
+
+    std::vector<std::string> sAlgo {"p", "ip", "ps", "ips"};
+    std::vector<std::string> aAlgo {"qr", "pa"};
+
+    if (in_array(algo, sAlgo))
+    {
+        cout << "Use " << algo << " algorithm to compute a single eigenvalue"<< endl;
+        auto output = solver->calculateEigenvalue(matrix);
+        cout << "computed" << output << endl;
+    } else if (in_array(algo, aAlgo)){
+        cout << "Use " << algo << " to compute all eigenvalues"<< endl;
+        auto output = solver->calculateEigenvalues(matrix);
+        cout << "computed" << output << endl;
     }
+    // use template? guess not
+    // test if eigenvalues can be returned successfully
+    // cout << "computed" << output << endl;
+
+    // real eigenvalues computed by Eigen library
+    VectorXcd eigenvaluestrue = matrix.eigenvalues();
+    cout << "real" << eigenvaluestrue << endl;
+
+    Eigen::EigenSolver<MatrixXd> es(matrix);
+    VectorXcd emo = es.eigenvalues();
+
+    cout << "The eigenvalues of A are: " << emo << endl;
+
+//    if (!outfile.empty()){
+//        write2csv(output, outfile);
+//    } else {
+//        cout << output << endl;
+//    }
+    delete solver;
+    solver = nullptr;
     return 0;
 }

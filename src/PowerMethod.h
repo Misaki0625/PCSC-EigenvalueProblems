@@ -5,26 +5,58 @@
 #ifndef PCSC_PROJECT_POWERMETHOD_H
 #define PCSC_PROJECT_POWERMETHOD_H
 
-#endif //PCSC_PROJECT_POWERMETHOD_H
-
 #include <Eigen/Dense>
 #include <iostream>
-#include "GeneralMethod.h"
+#include "SingleEigenMethod.h"
 using namespace std;
 using namespace Eigen;
 
-class PowerMethod : public GeneralEigenMethod {
+class PowerMethod : public SingleEigenMethod {
 public:
-    PowerMethod(double MaxIter, double height) : MaxIter_(MaxIter), height_(height) {}
-    ~PowerMethod() override {}
+    PowerMethod(double MaxIter, double tol) : MaxIter_(MaxIter), tol_(tol) {}
+    ~PowerMethod() override = default;
 
-    VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
-        VectorXd v(3);
-        v << 1, 2, 3;
-        return v;
+    Eigen::VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
+        return {};
+    }
+    double calculateEigenvalue(const MatrixXd& matrix) override {
+        // VectorXd eigenvalues;
+        MatrixXd A = matrix;
+
+        int n = A.rows();
+        // Initialize the eigenvector with random values
+        VectorXd x = VectorXd::Random(n);
+
+        // Initialize the eigenvalue to zero
+        double lambda = 0;
+
+        // Iterate until convergence or max iterations reached
+        for (int i = 0; i < MaxIter_; i++)
+        {
+            // Compute the matrix-vector product Ax
+            VectorXd Ax = A * x;
+
+            // Compute the eigenvalue as the maximum value of the vector
+            double newLambda = Ax.maxCoeff();
+
+            // Check for convergence
+            if (abs(newLambda - lambda) < tol_)
+            {
+                break;
+            }
+
+            // Update the eigenvalue and normalize the vector
+            lambda = newLambda;
+            x = Ax / lambda;
     }
 
+        cout << lambda << endl;
+
+        return lambda;
+    }
 private:
     double MaxIter_;
-    double height_;
+    double tol_;
 };
+
+#endif //PCSC_PROJECT_POWERMETHOD_H

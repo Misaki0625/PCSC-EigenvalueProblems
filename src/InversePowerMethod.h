@@ -5,23 +5,69 @@
 #ifndef PCSC_PROJECT_INVERSEPOWERMETHOD_H
 #define PCSC_PROJECT_INVERSEPOWERMETHOD_H
 
-#endif //PCSC_PROJECT_INVERSEPOWERMETHOD_H
 #include <Eigen/Dense>
 #include <iostream>
-//#include "GeneralMethod.h"
+#include "SingleEigenMethod.h"
 using namespace std;
 using namespace Eigen;
 
 // Inverse power method for calculating eigenvalues
-class InversePowerMethod : public GeneralEigenMethod {
+class InversePowerMethod : public SingleEigenMethod {
 public:
-    InversePowerMethod(double MaxIter, double height) : MaxIter_(MaxIter), height_(height) {}
+    InversePowerMethod(double MaxIter, double tol) : MaxIter_(MaxIter), tol_(tol) {}
     ~InversePowerMethod() override = default;
 
-    VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
+    Eigen::VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
         return {};
+    }
+    double calculateEigenvalue(const MatrixXd& matrix) override {
+        // VectorXd eigenvalues;
+        MatrixXd A = matrix;
+
+        int n = A.rows();
+        // Initialize the eigenvector with random values
+        VectorXd x = VectorXd::Random(n);
+        //VectorXd x = VectorXd::Unit(n, 0);
+
+        // Initialize the eigenvalue to zero
+        double lambda = 0;
+
+        // not inverse & output an error
+        MatrixXd A_inverse = A.inverse();
+
+        // Iterate until convergence or max iterations reached
+        for (int i = 0; i < MaxIter_; i++)
+        {
+            // Compute the next estimate of the eigenvector
+            // x = (A - lambda * Eigen::MatrixXd::Identity(A.rows(), A.cols())).inverse() * x;
+            x = A.inverse() * x;
+
+            // Normalize the eigenvector
+            x.normalize();
+
+            // Compute the next estimate of the eigenvalue
+            double newLambda = x.transpose() * A * x;
+
+            // Check for convergence
+            if (abs(newLambda - lambda) < tol_)
+            {
+                break;
+            }
+
+//            // Check for convergence
+//            if (std::abs(lambda - x.transpose() * A * x) < tol_)
+//                break;
+            // Update the eigenvalue and normalize the vector
+            lambda = newLambda;
+        }
+
+        cout << lambda << endl;
+
+        return lambda;
     }
 private:
     double MaxIter_;
-    double height_;
+    double tol_;
 };
+
+#endif //PCSC_PROJECT_INVERSEPOWERMETHOD_H

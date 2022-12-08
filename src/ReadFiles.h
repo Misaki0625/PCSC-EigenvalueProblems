@@ -1,8 +1,9 @@
 //
 // Created by suo on 05.12.22.
 //
-//#ifndef READFILES_H
-//#define READFILES_H
+
+#ifndef PCSC_PROJECT_PREADFILES_H
+#define PCSC_PROJECT_PREADFILES_H
 
 #include <iostream>
 #include <fstream>
@@ -14,12 +15,18 @@
 // Base class for file readers
 class FileReader {
 public:
+    FileReader() = default;
+    virtual ~FileReader() = default;
+
     virtual Eigen::MatrixXd read(const std::string& filename) = 0;
 };
 
 // CSV file reader class
 class CSVReader : public FileReader {
 public:
+    CSVReader() = default;
+    ~CSVReader() override = default;
+
     Eigen::MatrixXd read(const std::string& filename) override {
         std::ifstream file(filename);
         Eigen::MatrixXd matrix;
@@ -67,6 +74,9 @@ public:
 // Binary file reader class
 class BinaryReader : public FileReader {
 public:
+    BinaryReader() = default;
+    ~BinaryReader() override = default;
+
     Eigen::MatrixXd read(const std::string &filename) override {
         Eigen::MatrixXd matrix;
         std::ifstream file(filename, std::ios::binary);
@@ -115,3 +125,5 @@ public:
 //    ofstream out("data.bin", ios::binary);
 //    out.write((char*)a.data(), a.size()*sizeof(double));
 //    out.close();
+
+#endif //PCSC_PROJECT_PREADFILES_H
