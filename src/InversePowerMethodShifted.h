@@ -18,7 +18,7 @@ public:
     ~InversePowerMethodWithShift() override = default;
 
     Eigen::VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
-        return {};
+        throw std::logic_error("Method not implemented");
     }
     double calculateEigenvalue(const MatrixXd& matrix) override {
         // VectorXd eigenvalues;
@@ -35,13 +35,20 @@ public:
         // Initialize the eigenvector with random values
         VectorXd x = VectorXd::Random(n);
 
+        if (abs(A.determinant()) < 1e-5) {
+            // cout << "Input matrix is not linearly independent" << endl;
+            // return lambda;
+            throw std::invalid_argument("Input matrix for this algorithm must be linearly independent");
+        }
+
         Eigen::MatrixXd inv = (A - shift * Eigen::MatrixXd::Identity(A.rows(), A.cols())).inverse();
 
         // Initialize the eigenvalue to zero
         double lambda = 0;
+        int i;
 
         // Iterate until convergence or max iterations reached
-        for (int i = 0; i < MaxIter_; i++)
+        for (i = 0; i < MaxIter_; i++)
         {
             // Compute the shifted matrix and the next approximation
             // of the eigenvector
@@ -72,7 +79,9 @@ public:
             lambda = newLambda;
         }
 
-        cout << lambda << endl;
+        if (i == MaxIter_){
+            throw std::runtime_error("Convergence not achieved");
+        }
         return lambda;
     }
 private:

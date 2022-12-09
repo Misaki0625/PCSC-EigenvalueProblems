@@ -57,10 +57,10 @@ MatrixXd gramSchmidt(const MatrixXd& mat) {
 class PowerMethodAll : public AllEigenMethod {
 public:
     PowerMethodAll(double MaxIter, double tol) : MaxIter_(MaxIter), tol_(tol) {}
-    ~PowerMethodAll() override {}
+    ~PowerMethodAll() override = default;
 
     double calculateEigenvalue(const MatrixXd& matrix) override {
-        return {};
+        throw std::logic_error("Method not implemented");
     }
     VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
         VectorXd eigenvalues;
@@ -70,6 +70,11 @@ public:
         int n = A.rows();
         // Initialize the eigenvector with random values
         // VectorXd x = VectorXd::Random(n);
+        if (abs(A.determinant()) < 1e-5) {
+            // cout << "Input matrix is not linearly independent" << endl;
+            // return lambda;
+            throw std::invalid_argument("Input matrix for this algorithm must be linearly independent");
+        }
         MatrixXd m = randInit(n);
 
         // Gram-Schmidt process to orthonormalize this set m and generate a matrix v

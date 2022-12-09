@@ -17,7 +17,7 @@ public:
     ~PowerMethodWithShift() override = default;
 
     Eigen::VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
-        return {};
+        throw std::logic_error("Method not implemented");
     }
     double calculateEigenvalue(const MatrixXd& matrix) override {
         // VectorXd eigenvalues;
@@ -36,11 +36,12 @@ public:
 
         // Initialize the eigenvalue to zero
         double lambda = 0;
+        int i;
 
         Eigen::MatrixXd B = A - shift * Eigen::MatrixXd::Identity(A.rows(), A.cols());
 
         // Iterate until convergence or max iterations reached
-        for (int i = 0; i < MaxIter_; i++)
+        for (i = 0; i < MaxIter_; i++)
         {
             // Compute the next approximation of the eigenvector
             x = B.lu().solve(x);
@@ -63,7 +64,9 @@ public:
             lambda = newLambda;
         }
 
-        cout << lambda << endl;
+        if (i == MaxIter_){
+            throw std::runtime_error("Convergence not achieved");
+        }
         return lambda;
     }
 private:

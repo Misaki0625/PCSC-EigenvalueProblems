@@ -7,6 +7,7 @@
 
 #include <Eigen/Dense>
 #include <iostream>
+#include <stdexcept>
 #include "SingleEigenMethod.h"
 using namespace std;
 using namespace Eigen;
@@ -14,10 +15,10 @@ using namespace Eigen;
 class PowerMethod : public SingleEigenMethod {
 public:
     PowerMethod(double MaxIter, double tol) : MaxIter_(MaxIter), tol_(tol) {}
-    ~PowerMethod() override = default;
+    ~PowerMethod() {}
 
     Eigen::VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
-        return {};
+        throw std::logic_error("Method not implemented");
     }
     double calculateEigenvalue(const MatrixXd& matrix) override {
         // VectorXd eigenvalues;
@@ -29,9 +30,9 @@ public:
 
         // Initialize the eigenvalue to zero
         double lambda = 0;
-
+        int i;
         // Iterate until convergence or max iterations reached
-        for (int i = 0; i < MaxIter_; i++)
+        for (i = 0; i < MaxIter_; i++)
         {
             // Compute the matrix-vector product Ax
             VectorXd Ax = A * x;
@@ -49,8 +50,9 @@ public:
             lambda = newLambda;
             x = Ax / lambda;
     }
-
-        cout << lambda << endl;
+        if (i == MaxIter_){
+            throw std::runtime_error("Convergence not achieved");
+        }
 
         return lambda;
     }

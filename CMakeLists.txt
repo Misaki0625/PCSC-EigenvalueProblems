@@ -20,7 +20,7 @@ target_link_libraries(main pcsc)
 add_executable(matrix src/matrix.cpp)
 target_link_libraries(matrix pcsc)
 
-add_executable(test_pcsc test/test.cc)
+add_executable(test_pcsc test/TestQRMethod.cpp)
 target_link_libraries(test_pcsc gtest_main gtest pthread pcsc)
 
 add_custom_target(test ./test_pcsc DEPENDS test_pcsc)

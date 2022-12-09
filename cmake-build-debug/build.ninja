@@ -145,8 +145,8 @@ build matrix: CXX_EXECUTABLE_LINKER__matrix_Debug CMakeFiles/matrix.dir/src/matr
 
 build cmake_object_order_depends_target_test_pcsc: phony || cmake_object_order_depends_target_gtest cmake_object_order_depends_target_gtest_main cmake_object_order_depends_target_pcsc
 
-build CMakeFiles/test_pcsc.dir/test/test.cc.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/test.cc || cmake_object_order_depends_target_test_pcsc
-  DEP_FILE = CMakeFiles/test_pcsc.dir/test/test.cc.o.d
+build CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/TestQRMethod.cpp || cmake_object_order_depends_target_test_pcsc
+  DEP_FILE = CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o.d
   FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
   INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest/include -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest
   OBJECT_DIR = CMakeFiles/test_pcsc.dir
@@ -160,7 +160,7 @@ build CMakeFiles/test_pcsc.dir/test/test.cc.o: CXX_COMPILER__test_pcsc_Debug /Us
 #############################################
 # Link the executable test_pcsc
 
-build test_pcsc: CXX_EXECUTABLE_LINKER__test_pcsc_Debug CMakeFiles/test_pcsc.dir/test/test.cc.o | lib/libgtest_maind.a lib/libgtestd.a libpcsc.a || lib/libgtest_maind.a lib/libgtestd.a libpcsc.a
+build test_pcsc: CXX_EXECUTABLE_LINKER__test_pcsc_Debug CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o | lib/libgtest_maind.a lib/libgtestd.a libpcsc.a || lib/libgtest_maind.a lib/libgtestd.a libpcsc.a
   FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2
   LINK_LIBRARIES = lib/libgtest_maind.a  lib/libgtestd.a  -lpthread  libpcsc.a
   OBJECT_DIR = CMakeFiles/test_pcsc.dir

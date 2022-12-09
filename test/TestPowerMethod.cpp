@@ -19,8 +19,10 @@ protected:
     // You can remove any or all of the following functions if their bodies would
     // be empty.
 
-    PowerMethodTest() {
+    PowerMethodTest(): powerMethod(1000, 1e-8) {
         // You can do set-up work for each test here.
+        MaxIter = 1000;
+        tol = 1e-8;
     }
 
     ~PowerMethodTest() override {
@@ -42,19 +44,18 @@ protected:
 
     // Class members declared here can be used by all tests in the test suite
     // for Foo.
-    int MaxIter = 1000;
-    double tol = 1e-8;
-    PowerMethod powerMethod_;
+    int MaxIter;
+    double tol;
+    PowerMethod powerMethod;
     // Create a SelfAdjointEigenSolver object
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver;
 };
 
-TEST_F(PowerMethodTest, RandomMatrix) {
-    MatrixXd I = Eigen::MatrixXd::Random(3, 3);
-    // EXPECT_EQ(f.Bar(input_filepath, output_filepath), 0);
+TEST_F(PowerMethodTest, ScalarMatrix) {
+    MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 5);
     solver.compute(I);
     // Find the largest eigenvalue
-    double maxEigenvalue = solver.eigenvalues().maxCoeff();
+    double maxEigenvalue = solver.eigenvalues().cwiseAbs().maxCoeff();
     ASSERT_NEAR(powerMethod.calculateEigenvalue(I), maxEigenvalue, 1e-8);
 
 }
@@ -63,18 +64,22 @@ TEST_F(PowerMethodTest, UnitMatrix) {
     MatrixXd II = Eigen::MatrixXd::Identity(3, 3);
     solver.compute(II);
     // Find the largest eigenvalue
-    double maxEigenvalue = solver.eigenvalues().maxCoeff();
+    double maxEigenvalue = solver.eigenvalues().cwiseAbs().maxCoeff();
     ASSERT_NEAR(powerMethod.calculateEigenvalue(II), maxEigenvalue, 1e-8);
-
 }
 
 TEST_F(PowerMethodTest, SelfAdjointMatrix) {
-    MatrixXd III = Eigen::MatrixXd::Random(3, 3);
+    MatrixXd III;
+    III << 1,2,3,
+           2,4,6,
+           3,6,5;
     solver.compute(III);
     // Find the largest eigenvalue
-    double maxEigenvalue = solver.eigenvalues().maxCoeff();
+    double maxEigenvalue = solver.eigenvalues().cwiseAbs().maxCoeff();
     ASSERT_NEAR(powerMethod.calculateEigenvalue(III), maxEigenvalue, 1e-8);
 }
+
+// add more module to test convergence.
 
 }
 }

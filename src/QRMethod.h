@@ -18,7 +18,7 @@ public:
     ~QRMethod() override = default;
 
     double calculateEigenvalue(const MatrixXd& matrix) override {
-        return {};
+        throw std::logic_error("Method not implemented");
     }
     VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
         // Initialize variables

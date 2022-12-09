@@ -141,18 +141,33 @@ public:
         std::cout << "------------------------------------------------------------" << std::endl;
     }
     void printMatrix(const MatrixXd& matrix) {
-        if (abs(matrix.determinant()) > 1e-5) {
-            // std::cout << "------------------------------------------------------------" << std::endl;
-            std::cout << "Input matrix:" << std::endl;
-            std::cout << "------------------------------------------------------------" << std::endl;
-            std::cout << matrix << std::endl;
-            std::cout << "------------------------------------------------------------" << std::endl;
-        } else{
+        std::cout << "Input matrix:" << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << matrix << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        if (abs(matrix.determinant()) < 1e-5) {
             std::cout << "Input matrix is not linearly independent." << std::endl;
+            std::cout << "------------------------------------------------------------" << std::endl;
+        } else {
+            std::cout << "Input matrix is linearly independent." << std::endl;
+            std::cout << "------------------------------------------------------------" << std::endl;
         }
     }
-    void printOutput(const VectorXd& output) {
-        std::cout << "the eigenvalues is" << output << std::endl;
+    void printOutputDouble(double output) {
+        std::cout << "The computed eigenvalue is" << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << output << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+    }
+    void printOutputVector(const VectorXd& output) {
+        std::cout << "The computed eigenvalues are" << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << output << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+    }
+    void printWriteFile(const string& outfile) {
+        cout << "Results written to " << outfile << endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
     }
 private:
 //    std::map<std::string, std::string> dict_algo;
@@ -215,7 +230,7 @@ GeneralEigenMethod* createMethod(const std::string& method, double MaxIter, doub
     return nullptr;
 }
 
-void write2csv(const VectorXd& vec, const std::string& filename)
+void vec2csv(const VectorXd& vec, const std::string& filename)
 {
     std::ofstream file(filename);
     if (!file.is_open())
@@ -235,6 +250,18 @@ void write2csv(const VectorXd& vec, const std::string& filename)
     }
     file << std::endl;
 
+    file.close();
+}
+
+void double2csv(double value, const std::string& filename)
+{
+    // Open the CSV file for writing
+    std::ofstream file(filename, std::ios::out | std::ios::app);
+
+    // Write the double value to the file
+    file << value << std::endl;
+
+    // Close the file
     file.close();
 }
 
@@ -273,70 +300,6 @@ int main(int argc, char **argv){
     Configs printer;
     printer.printConfig(a);
 
-
-//    // command option: file
-//    if(input.cmdOptionExists("-f")){
-//        // assign the option
-//        const std::string &filename = input.getCmdOption("-f");
-//        if (!filename.empty()){
-//            file = filename;
-//            cout << "filename:" << file << endl;
-//        } else{
-//            cout << "file is empty!" << endl;
-//        }
-//    } else{
-//        // if the option does not exist, output a message
-//        cout << "Option -f does not exist" << endl;
-//        return 1;
-//    }
-//    // command option: algorithm
-//    if(input.cmdOptionExists("-algo")){
-//        // assign the option
-//        const std::string &algorithm = input.getCmdOption("-algo");
-//        if (!algorithm.empty()){
-//            algo = algorithm;
-//            cout << "algorithm:" << algo << endl;
-//        } else{
-//            cerr << "Option -algo is empty" << endl;
-//            return 1;
-//        }
-//    } else{
-//        // if the option does not exist, output a message
-//        cout << "Option -algo does not exist" << endl;
-//        cout << "Falling back to the default value: qr" << endl;
-//        algo = "qr";
-//    }
-//
-//    if(input.cmdOptionExists("-MaxIter")){
-//        // assign the option
-//        const std::string &iteration = input.getCmdOption("-MaxIter");
-//        if (!iteration.empty()){
-//            MaxIter = stoi(iteration);
-//            cout << "max iteration:" << MaxIter << endl;
-//        } else{
-//            cerr << "Option -MaxIter is empty" << endl;
-//            return 1;
-//        }
-//    } else{
-//        // if the option does not exist, output a message
-//        cout << "Option -MaxIter does not exist" << endl;
-//        cout << "Falling back to the default value: 10000" << endl;
-//        MaxIter = 10000;
-//    }
-//
-//    if(input.cmdOptionExists("-o")){
-//        // assign the option
-//        const std::string &output = input.getCmdOption("-o");
-//        if (!output.empty()) {
-//            out = output;
-//            cout << "output file:" << out << endl;
-//        }
-//    } else{
-//        // if the option does not exist, output a message
-//        cout << "No file not provided" << endl;
-//        cout << "Print the results to the screen" << endl;
-//    }
-
     FileReader* reader = createReader(file);
     if (reader == nullptr) {
         std::cout << "Invalid file type" << std::endl;
@@ -363,20 +326,36 @@ int main(int argc, char **argv){
 
     if (in_array(algo, sAlgo))
     {
-        cout << "This algorithm is to compute a single eigenvalue"<< endl;
+        cout << "** This algorithm is to compute a single eigenvalue **"<< endl;
         auto output = solver->calculateEigenvalue(matrix);
-        cout << "computed" << output << endl;
+        printer.printOutputDouble(output);
+        if (identifyFileType(outfile)!="csv"){
+            throw std::invalid_argument( "Output file must be CSV file! ");
+        } else {
+            double2csv(output, outfile);
+            printer.printWriteFile(outfile);
+        }
     } else if (in_array(algo, aAlgo)){
-        cout << "This algorithm is to compute all eigenvalues"<< endl;
+        cout << "** This algorithm is to compute all eigenvalues **"<< endl;
         auto output = solver->calculateEigenvalues(matrix);
-        cout << "computed" << output << endl;
+        printer.printOutputVector(output);
+        if (identifyFileType(outfile)!="csv"){
+            throw std::invalid_argument( "Output file must be CSV file! ");
+        } else {
+            vec2csv(output, outfile);
+            printer.printWriteFile(outfile);
+        }
     }
+
     // use template? guess not
     // test if eigenvalues can be returned successfully
 
     // real eigenvalues computed by Eigen library
     VectorXcd eigenvaluestrue = matrix.eigenvalues();
     cout << "real" << eigenvaluestrue << endl;
+    cout << "largest: " << eigenvaluestrue.cwiseAbs().maxCoeff() << endl;
+    cout << "smallest: " << eigenvaluestrue.cwiseAbs().minCoeff() << endl;
+    auto k = eigenvaluestrue.cwiseAbs();
 
     if (abs(matrix.determinant()) > 1e-8) //
     {
@@ -385,11 +364,6 @@ int main(int argc, char **argv){
         cout << "Not Invertible" << endl;
     };
 
-//    if (!outfile.empty()){
-//        write2csv(output, outfile);
-//    } else {
-//        cout << output << endl;
-//    }
     delete solver;
     solver = nullptr;
 
@@ -406,6 +380,18 @@ int main(int argc, char **argv){
     std::cout << "Is unitary: " << isUnitary << std::endl;
 
     // std::cout << m.eigenvalues() << std::endl;
+
+//    try
+//    {
+//        // Call the MyMethod() function
+//        PowerMethod cc(1000, 1e-8);
+//        cc.calculateEigenvalues(matrix);
+//    }
+//    catch (const std::logic_error& e)
+//    {
+//        // Print the error message to the console
+//        std::cerr << "Error: " << e.what() << std::endl;
+//    }
 
     return 0;
 }
