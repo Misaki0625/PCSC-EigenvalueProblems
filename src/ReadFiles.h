@@ -65,7 +65,7 @@ public:
         file.close();
 
         // Print matrix
-        std::cout << matrix << std::endl;
+        // std::cout << matrix << std::endl;
 
         return matrix;
     }
@@ -108,7 +108,7 @@ public:
         file.close();
 
         // Print matrix
-        std::cout << matrix << std::endl;
+        // std::cout << matrix << std::endl;
 
         // Return matrix
         return matrix;

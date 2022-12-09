@@ -19,15 +19,17 @@ MatrixXd randInit(int n){
     A.row(1) += 2 * A.row(0);
 
     // Check if the matrix is invertible; normally it should be invertible
+    for (int i = 0; true; i++)
     if (abs(A.determinant()) > 1e-5) //
     {
         // cout << "The matrix is invertible" << endl;
         return A;
-    } else{
-        cout << "The matrix is not invertible" << endl;
-        cout << "please try again!" << endl;
-        return {}; // to modify or to terminate the program; loop to return valid matrix
     }
+//    } else{
+//        cout << "The matrix is not invertible" << endl;
+//        cout << "please try again!" << endl;
+//        return {}; // to modify or to terminate the program; loop to return valid matrix
+//    }
 }
 
 MatrixXd gramSchmidt(const MatrixXd& mat) {

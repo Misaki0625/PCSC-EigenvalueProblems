@@ -9,6 +9,7 @@
 #include <cmath>
 #include <exception>
 #include <algorithm>
+#include "PowerMethod.h"
 
 using namespace std;
 using namespace Eigen;
@@ -120,6 +121,26 @@ int main(){
     cout << "A" << A_ << endl;
 
     cout << b.eigenvalues() << endl;
+
+    Eigen::Matrix3d m;
+    m << 1, 0, 0,
+            0, 1, 0,
+            0, 0, 1;
+
+    // Create a SelfAdjointEigenSolver object
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver;
+
+    // Compute the eigenvalues and eigenvectors of the matrix
+    solver.compute(m);
+
+    // Print the eigenvalues to the console
+    std::cout << "Eigenvalues: " << solver.eigenvalues().transpose() << std::endl;
+
+    // Find the largest eigenvalue
+    double maxEigenvalue = solver.eigenvalues().maxCoeff();
+
+    // Print the largest eigenvalue to the console
+    std::cout << "Largest eigenvalue: " << maxEigenvalue << std::endl;
 
     return 0;
 }

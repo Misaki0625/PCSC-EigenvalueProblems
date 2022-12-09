@@ -3,10 +3,14 @@
 #include <fstream>
 #include <string>
 #include <list>
+#include <map>
+#include <any>
 #include <Eigen/Dense>
+#include <typeinfo>
 #include <cmath>
 #include <exception>
 #include <algorithm>
+#include <utility>
 #include "ReadFiles.h"
 #include "PowerMethod.h"
 #include "InversePowerMethod.h"
@@ -63,6 +67,101 @@ public:
     }
 private:
     std::vector <std::string> tokens;
+};
+
+// Class to print the configuration of the method.
+class ConfigPrinter {
+public:
+    ConfigPrinter(std::map<std::string, std::any>  config)
+            : config_(std::move(config)) {}
+
+    void print() {
+        std::cout << "Algorithm configuration:" << std::endl;
+        for (const auto& [key, value] : config_) {
+            std::cout << key << ": " << std::any_cast<std::string>(value) << std::endl;
+        }
+    }
+
+private:
+    std::map<std::string, std::any> config_;
+};
+
+class Config1
+{
+public:
+    // Constructor to initialize the member variables
+    Config1(const std::string& str, int num1, double num2)
+            : str(str), num1(num1), num2(num2) {}
+
+    // Function to print the values of the member variables
+    void print()
+    {
+        std::cout << "String: " << str << std::endl;
+        std::cout << "Int: " << num1 << std::endl;
+        std::cout << "Double: " << num2 << std::endl;
+    }
+
+private:
+    std::string str;
+    int num1;
+    double num2;
+};
+
+struct Config
+{
+    std::string file;
+    std::string algo;
+    std::string outfile;
+    std::string shift;
+    int MaxIter;
+    double tol;
+};
+
+// Function to print the values of a Config object
+class Configs{
+public:
+    void printConfig(const Config& config)
+    {
+        std::cout << "------------------------------------------------------------" << std::endl;
+        std::cout << "Configuration: " << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+        std::map<std::string, std::string> dict_algo;
+        dict_algo["p"] = "power method";
+        dict_algo["ip"] = "inverse power method";
+        dict_algo["ps"] = "power method with shift";
+        dict_algo["ips"] = "inverse power method with shift";
+        dict_algo["qr"] = "QR Method";
+        dict_algo["pa"] = "power method to compute all eigenvalues";
+
+        std::cout << "Input file is " << config.file << std::endl;
+        std::cout << "Algorithm is " << dict_algo[config.algo] << std::endl;
+        std::cout << "Maximum iteration is " << config.MaxIter << std::endl;
+        std::cout << "Tolerance is " << config.tol << std::endl;
+        std::cout << "Shift is " << config.shift << std::endl;
+        std::cout << "------------------------------------------------------------" << std::endl;
+    }
+    void printMatrix(const MatrixXd& matrix) {
+        if (abs(matrix.determinant()) > 1e-5) {
+            // std::cout << "------------------------------------------------------------" << std::endl;
+            std::cout << "Input matrix:" << std::endl;
+            std::cout << "------------------------------------------------------------" << std::endl;
+            std::cout << matrix << std::endl;
+            std::cout << "------------------------------------------------------------" << std::endl;
+        } else{
+            std::cout << "Input matrix is not linearly independent." << std::endl;
+        }
+    }
+    void printOutput(const VectorXd& output) {
+        std::cout << "the eigenvalues is" << output << std::endl;
+    }
+private:
+//    std::map<std::string, std::string> dict_algo;
+//    dict_algo["p"] = "power method";
+//    dict_algo["ip"] = "inverse power method";
+//    dict_algo["ps"] = "power method with shift";
+//    dict_algo["ips"] = "inverse power method with shift";
+//    dict_algo["qr"] = "QR Method";
+//    dict_algo["pa"] = "power method to compute all eigenvalues";
 };
 
 // Function to identify the file type by its name
@@ -146,13 +245,20 @@ bool in_array(const std::string &value, const std::vector<std::string> &array)
 
 
 
-    int main(int argc, char **argv){
+int main(int argc, char **argv){
     std::string file;
     std::string algo;
     std::string outfile;
     std::string shift;
     int MaxIter;
     double tol;
+
+//    std::map<std::string, std::any> config;
+//    config["max_iterations"] = "kkk";
+//    config["tolerance"] = "qaew";
+
+//    ConfigPrinter printer(config);
+//    printer.print();
 
     InputParser input(argc, argv);
 
@@ -162,6 +268,10 @@ bool in_array(const std::string &value, const std::vector<std::string> &array)
     MaxIter = stoi(input.assignCmdOption("-MaxIter", true, "10000"));
     tol = stod(input.assignCmdOption("-tol", true, "1e-8"));
     shift = input.assignCmdOption("-shift", true, "default");
+
+    Config a = {file, algo, outfile, shift, MaxIter, tol};
+    Configs printer;
+    printer.printConfig(a);
 
 
 //    // command option: file
@@ -230,13 +340,15 @@ bool in_array(const std::string &value, const std::vector<std::string> &array)
     FileReader* reader = createReader(file);
     if (reader == nullptr) {
         std::cout << "Invalid file type" << std::endl;
+        std::cout << "Please provide a csv or binary file" << std::endl;
         return 1;
     }
     auto matrix = reader->read(file);
     // test if matrix is read successfully
     delete reader;
     reader = nullptr;
-    cout << matrix << endl;
+    // cout << matrix << endl;
+    printer.printMatrix(matrix);
 
     GeneralEigenMethod* solver = createMethod(algo, MaxIter, tol, shift);
     if (solver == nullptr) {
@@ -251,26 +363,27 @@ bool in_array(const std::string &value, const std::vector<std::string> &array)
 
     if (in_array(algo, sAlgo))
     {
-        cout << "Use " << algo << " algorithm to compute a single eigenvalue"<< endl;
+        cout << "This algorithm is to compute a single eigenvalue"<< endl;
         auto output = solver->calculateEigenvalue(matrix);
         cout << "computed" << output << endl;
     } else if (in_array(algo, aAlgo)){
-        cout << "Use " << algo << " to compute all eigenvalues"<< endl;
+        cout << "This algorithm is to compute all eigenvalues"<< endl;
         auto output = solver->calculateEigenvalues(matrix);
         cout << "computed" << output << endl;
     }
     // use template? guess not
     // test if eigenvalues can be returned successfully
-    // cout << "computed" << output << endl;
 
     // real eigenvalues computed by Eigen library
     VectorXcd eigenvaluestrue = matrix.eigenvalues();
     cout << "real" << eigenvaluestrue << endl;
 
-    Eigen::EigenSolver<MatrixXd> es(matrix);
-    VectorXcd emo = es.eigenvalues();
-
-    cout << "The eigenvalues of A are: " << emo << endl;
+    if (abs(matrix.determinant()) > 1e-8) //
+    {
+        cout << "The matrix is invertible" << endl;
+    } else{
+        cout << "Not Invertible" << endl;
+    };
 
 //    if (!outfile.empty()){
 //        write2csv(output, outfile);
@@ -279,5 +392,20 @@ bool in_array(const std::string &value, const std::vector<std::string> &array)
 //    }
     delete solver;
     solver = nullptr;
+
+// Define a 3x3 matrix
+    Eigen::Matrix3d m;
+    m << 1,0,0,
+    0,1,0,
+    0,0,1;
+
+    // Check if the matrix is unitary
+    bool isUnitary = matrix.isUnitary(0.5);
+
+    // Print the result to the console
+    std::cout << "Is unitary: " << isUnitary << std::endl;
+
+    // std::cout << m.eigenvalues() << std::endl;
+
     return 0;
 }
