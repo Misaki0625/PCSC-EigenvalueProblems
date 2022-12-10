@@ -146,7 +146,8 @@ public:
         std::cout << "Shift is " << config.shift << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
     }
-    static void printMatrix(const MatrixXd& matrix) {
+    template <typename ScalarType>
+    static void printMatrix(const Eigen::Matrix<ScalarType, -1, -1>& matrix) {
         std::cout << "Input matrix:" << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
         std::cout << matrix << std::endl;
@@ -159,13 +160,15 @@ public:
             std::cout << "------------------------------------------------------------" << std::endl;
         }
     }
-    static void printOutputDouble(double output) {
+    template <typename ScalarType>
+    static void printOutputScalar(ScalarType output) {
         std::cout << "The computed eigenvalue is" << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
         std::cout << output << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
     }
-    static void printOutputVector(const VectorXd& output) {
+    template <typename ScalarType>
+    static void printOutputVector(const Eigen::Vector<ScalarType, -1>& output) {
         std::cout << "The computed eigenvalues are" << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
         std::cout << output << std::endl;
@@ -335,7 +338,7 @@ int main(int argc, char **argv){
     {
         cout << "** This algorithm is to compute a single eigenvalue **"<< endl;
         auto output = solver->calculateEigenvalue(matrix);
-        Configs::printOutputDouble(output);
+        Configs::printOutputScalar(output);
         if (identifyFileType(outfile)!="csv"){
             throw std::invalid_argument( "Output file must be CSV file! ");
         } else {

@@ -78,7 +78,7 @@ private:
     int MaxIter_;
     double tol_;
     const std::string& shift_;
-    static double computeShift(const MatrixType& matrix)
+    static ScalarType computeShift(const MatrixType& matrix)
     {
         // Compute the average of the diagonal elements of A
         // as an initial estimate of the shift

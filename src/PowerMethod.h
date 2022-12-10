@@ -29,7 +29,7 @@ public:
 
         int n = A.rows();
         // Initialize the eigenvector with random values
-        VectorXd x = VectorXd::Random(n);
+        VectorType x = VectorType::Random(n);
 
         // Initialize the eigenvalue to zero
         ScalarType lambda = 0;
@@ -38,7 +38,7 @@ public:
         for (i = 0; i < MaxIter_; i++)
         {
             // Compute the matrix-vector product Ax
-            VectorXd Ax = A * x;
+            VectorType Ax = A * x;
 
             // Compute the eigenvalue as the maximum value of the vector
             ScalarType newLambda = Ax.maxCoeff();

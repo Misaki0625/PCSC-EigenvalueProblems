@@ -57,7 +57,7 @@ public:
             x.normalize();
 
             // Compute the next estimate of the eigenvalue
-            auto newLambda = x.transpose() * A * x;
+            ScalarType newLambda = x.transpose() * A * x;
 
             // Check for convergence
             if (abs(newLambda - lambda) < tol_)
