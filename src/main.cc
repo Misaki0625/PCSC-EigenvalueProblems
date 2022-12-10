@@ -110,6 +110,7 @@ private:
 struct Config
 {
     std::string file;
+    std::string scalar;
     std::string algo;
     std::string outfile;
     std::string shift;
@@ -120,27 +121,32 @@ struct Config
 // Function to print the values of a Config object
 class Configs{
 public:
-    void printConfig(const Config& config)
+    static std::map<std::string, std::string> getAlgorithmMap(){
+        std::map<std::string, std::string> dictAlgo;
+        dictAlgo["p"] = "power method";
+        dictAlgo["ip"] = "inverse power method";
+        dictAlgo["ps"] = "power method with shift";
+        dictAlgo["ips"] = "inverse power method with shift";
+        dictAlgo["qr"] = "QR Method";
+        dictAlgo["pa"] = "power method to compute all eigenvalues";
+        return dictAlgo;
+    }
+    static std::map<std::string, std::string> mapAlgorithm;
+    static void printConfig(const Config& config)
     {
         std::cout << "------------------------------------------------------------" << std::endl;
         std::cout << "Configuration: " << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
-        std::map<std::string, std::string> dict_algo;
-        dict_algo["p"] = "power method";
-        dict_algo["ip"] = "inverse power method";
-        dict_algo["ps"] = "power method with shift";
-        dict_algo["ips"] = "inverse power method with shift";
-        dict_algo["qr"] = "QR Method";
-        dict_algo["pa"] = "power method to compute all eigenvalues";
 
         std::cout << "Input file is " << config.file << std::endl;
-        std::cout << "Algorithm is " << dict_algo[config.algo] << std::endl;
+        std::cout << "Scalar type is " << config.scalar << std::endl;
+        std::cout << "Algorithm is " << mapAlgorithm[config.algo] << std::endl;
         std::cout << "Maximum iteration is " << config.MaxIter << std::endl;
         std::cout << "Tolerance is " << config.tol << std::endl;
         std::cout << "Shift is " << config.shift << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
     }
-    void printMatrix(const MatrixXd& matrix) {
+    static void printMatrix(const MatrixXd& matrix) {
         std::cout << "Input matrix:" << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
         std::cout << matrix << std::endl;
@@ -153,31 +159,26 @@ public:
             std::cout << "------------------------------------------------------------" << std::endl;
         }
     }
-    void printOutputDouble(double output) {
+    static void printOutputDouble(double output) {
         std::cout << "The computed eigenvalue is" << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
         std::cout << output << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
     }
-    void printOutputVector(const VectorXd& output) {
+    static void printOutputVector(const VectorXd& output) {
         std::cout << "The computed eigenvalues are" << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
         std::cout << output << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
     }
-    void printWriteFile(const string& outfile) {
+    static void printWriteFile(const string& outfile) {
         cout << "Results written to " << outfile << endl;
         std::cout << "------------------------------------------------------------" << std::endl;
     }
-private:
-//    std::map<std::string, std::string> dict_algo;
-//    dict_algo["p"] = "power method";
-//    dict_algo["ip"] = "inverse power method";
-//    dict_algo["ps"] = "power method with shift";
-//    dict_algo["ips"] = "inverse power method with shift";
-//    dict_algo["qr"] = "QR Method";
-//    dict_algo["pa"] = "power method to compute all eigenvalues";
+//private:
 };
+
+std::map<std::string, std::string> Configs::mapAlgorithm=Configs::getAlgorithmMap();
 
 // Function to identify the file type by its name
 std::string identifyFileType(std::string filename)
@@ -200,32 +201,34 @@ std::string identifyFileType(std::string filename)
 }
 
 //reader function by extension name of file
-FileReader* createReader(const std::string& file)
+template <typename ScalarType>
+std::unique_ptr<FileReader<ScalarType>> createReader(const std::string& file)
 {
     auto type = identifyFileType(file);
     if (type == "csv"){
-        return new CSVReader();
+        return std::make_unique<CSVReader<ScalarType>> ();
     } else if (type == "bin"){
-        return new BinaryReader();
+        return std::make_unique<BinaryReader<ScalarType>> ();
     }
     return nullptr;
 }
 
 //solver function by algorithm and max iteration
-GeneralEigenMethod* createMethod(const std::string& method, double MaxIter, double tol, const std::string& shift)
+template <typename ScalarType>
+std::unique_ptr<GeneralEigenMethod<ScalarType>> createMethod(const std::string& method, int MaxIter, double tol, const std::string& shift)
 {
     if (method == "p") {
-        return new PowerMethod(MaxIter, tol);
+        return std::make_unique<PowerMethod<ScalarType>> (MaxIter, tol);
     } else if (method == "ip") {
-        return new InversePowerMethod(MaxIter, tol);
+        return std::make_unique<InversePowerMethod<ScalarType>> (MaxIter, tol);
     } else if (method == "ps") {
-        return new PowerMethodWithShift(MaxIter, tol, shift);
+        return std::make_unique<PowerMethodWithShift<ScalarType>> (MaxIter, tol, shift);
     } else if (method == "ips") {
-        return new InversePowerMethodWithShift(MaxIter, tol, shift);
+        return std::make_unique<InversePowerMethodWithShift<ScalarType>> (MaxIter, tol, shift);
     } else if (method == "qr") {
-        return new QRMethod(MaxIter, tol);
+        return std::make_unique<QRMethod<ScalarType>> (MaxIter, tol);
     } else if (method == "pa") {
-        return new PowerMethodAll(MaxIter, tol);
+        return std::make_unique<PowerMethodAll<ScalarType>> (MaxIter, tol);
     }
     return nullptr;
 }
@@ -273,7 +276,9 @@ bool in_array(const std::string &value, const std::vector<std::string> &array)
 
 
 int main(int argc, char **argv){
+    using ScalarType = std::complex<double>;
     std::string file;
+    std::string scalar;
     std::string algo;
     std::string outfile;
     std::string shift;
@@ -290,30 +295,32 @@ int main(int argc, char **argv){
     InputParser input(argc, argv);
 
     file = input.assignCmdOption("-f", false, "");
+    scalar = input.assignCmdOption("-scalar", false, "d");
     algo = input.assignCmdOption("-algo", true, "qr");
     outfile = input.assignCmdOption("-o", true, "output.csv");
     MaxIter = stoi(input.assignCmdOption("-MaxIter", true, "10000"));
     tol = stod(input.assignCmdOption("-tol", true, "1e-8"));
     shift = input.assignCmdOption("-shift", true, "default");
 
-    Config a = {file, algo, outfile, shift, MaxIter, tol};
-    Configs printer;
-    printer.printConfig(a);
+    Config a = {file, scalar, algo, outfile, shift, MaxIter, tol};
+    Configs::printConfig(a);
 
-    FileReader* reader = createReader(file);
+    // FileReader<double> reader = createReader(file);
+    if (scalar == "double") {
+
+    } else if(scalar == "complex") {
+        using ScalarType = std::complex<double>;
+    }
+    auto reader = createReader<ScalarType>(file);
     if (reader == nullptr) {
         std::cout << "Invalid file type" << std::endl;
         std::cout << "Please provide a csv or binary file" << std::endl;
         return 1;
     }
     auto matrix = reader->read(file);
-    // test if matrix is read successfully
-    delete reader;
-    reader = nullptr;
-    // cout << matrix << endl;
-    printer.printMatrix(matrix);
+    Configs::printMatrix(matrix);
 
-    GeneralEigenMethod* solver = createMethod(algo, MaxIter, tol, shift);
+    auto solver = createMethod<ScalarType>(algo, MaxIter, tol, shift);
     if (solver == nullptr) {
         std::cout << "Invalid algorithm type" << std::endl;
         return 1;
@@ -328,24 +335,28 @@ int main(int argc, char **argv){
     {
         cout << "** This algorithm is to compute a single eigenvalue **"<< endl;
         auto output = solver->calculateEigenvalue(matrix);
-        printer.printOutputDouble(output);
+        Configs::printOutputDouble(output);
         if (identifyFileType(outfile)!="csv"){
             throw std::invalid_argument( "Output file must be CSV file! ");
         } else {
-            double2csv(output, outfile);
-            printer.printWriteFile(outfile);
+            //double2csv(output, outfile);
+            Configs::printWriteFile(outfile);
         }
     } else if (in_array(algo, aAlgo)){
         cout << "** This algorithm is to compute all eigenvalues **"<< endl;
         auto output = solver->calculateEigenvalues(matrix);
-        printer.printOutputVector(output);
+        Configs::printOutputVector(output);
         if (identifyFileType(outfile)!="csv"){
             throw std::invalid_argument( "Output file must be CSV file! ");
         } else {
-            vec2csv(output, outfile);
-            printer.printWriteFile(outfile);
+            // vec2csv(output, outfile);
+            Configs::printWriteFile(outfile);
         }
     }
+
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+    MatrixType p = MatrixType::Random(3, 3);
+    cout << p << endl;
 
     // use template? guess not
     // test if eigenvalues can be returned successfully
@@ -364,8 +375,8 @@ int main(int argc, char **argv){
         cout << "Not Invertible" << endl;
     };
 
-    delete solver;
-    solver = nullptr;
+//    delete solver;
+//    solver = nullptr;
 
 // Define a 3x3 matrix
     Eigen::Matrix3d m;

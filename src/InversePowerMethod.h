@@ -12,25 +12,28 @@ using namespace std;
 using namespace Eigen;
 
 // Inverse power method for calculating eigenvalues
-class InversePowerMethod : public SingleEigenMethod {
+template <typename ScalarType>
+class InversePowerMethod : public SingleEigenMethod<ScalarType> {
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+    using VectorType = Eigen::Vector<ScalarType, -1>;
 public:
-    InversePowerMethod(double MaxIter, double tol) : MaxIter_(MaxIter), tol_(tol) {}
+    InversePowerMethod(int MaxIter, double tol) : MaxIter_(MaxIter), tol_(tol) {}
     ~InversePowerMethod() override = default;
 
-    Eigen::VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
+    VectorType calculateEigenvalues(const MatrixType& matrix) override {
         throw std::logic_error("Method not implemented");
     }
-    double calculateEigenvalue(const MatrixXd& matrix) override {
+    ScalarType calculateEigenvalue(const MatrixType& matrix) override {
         // VectorXd eigenvalues;
-        MatrixXd A = matrix;
+        MatrixType A = matrix;
 
         int n = A.rows();
 
         // Initialize the eigenvector with random values
-        VectorXd x = VectorXd::Random(n);
+        VectorType x = VectorType::Random(n);
 
         // Initialize the eigenvalue to zero
-        double lambda = 0;
+        ScalarType lambda = 0;
         int i;
 
         if (abs(A.determinant()) < 1e-5) {
@@ -41,7 +44,7 @@ public:
         //VectorXd x = VectorXd::Unit(n, 0);
 
         // not inverse & output an error
-        MatrixXd A_inverse = A.inverse();
+        MatrixType A_inverse = A.inverse();
 
         // Iterate until convergence or max iterations reached
         for (i = 0; i < MaxIter_; i++)
@@ -54,7 +57,7 @@ public:
             x.normalize();
 
             // Compute the next estimate of the eigenvalue
-            double newLambda = x.transpose() * A * x;
+            auto newLambda = x.transpose() * A * x;
 
             // Check for convergence
             if (abs(newLambda - lambda) < tol_)

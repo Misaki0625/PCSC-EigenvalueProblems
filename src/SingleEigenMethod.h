@@ -12,13 +12,16 @@ using namespace std;
 using namespace Eigen;
 
 // Inverse power method for calculating eigenvalues
-class SingleEigenMethod : public GeneralEigenMethod {
+template <typename ScalarType>
+class SingleEigenMethod : public GeneralEigenMethod<ScalarType>{
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+    using VectorType = Eigen::Vector<ScalarType, -1>;
 public:
     SingleEigenMethod() = default;
 
     virtual ~SingleEigenMethod() = default;
 
-    virtual double calculateEigenvalue(const MatrixXd &matrix) = 0;
+    virtual ScalarType calculateEigenvalue(const MatrixType &matrix) = 0;
 };
 
 #endif //MAIN_CPP_SINGLEEIGENMETHOD_H

@@ -38,49 +38,86 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug/
 # =============================================================================
-# Object build statements for STATIC_LIBRARY target pcsc
-
-
-#############################################
-# Order-only phony target for pcsc
-
-build cmake_object_order_depends_target_pcsc: phony || CMakeFiles/pcsc.dir
-
-build CMakeFiles/pcsc.dir/src/pcsc.cc.o: CXX_COMPILER__pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/pcsc.cc || cmake_object_order_depends_target_pcsc
-  DEP_FILE = CMakeFiles/pcsc.dir/src/pcsc.cc.o.d
-  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
-  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
-  OBJECT_DIR = CMakeFiles/pcsc.dir
-  OBJECT_FILE_DIR = CMakeFiles/pcsc.dir/src
-
-
-# =============================================================================
-# Link build statements for STATIC_LIBRARY target pcsc
-
-
-#############################################
-# Link the static library libpcsc.a
-
-build libpcsc.a: CXX_STATIC_LIBRARY_LINKER__pcsc_Debug CMakeFiles/pcsc.dir/src/pcsc.cc.o
-  ARCH_FLAGS = -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2
-  LANGUAGE_COMPILE_FLAGS = -g
-  OBJECT_DIR = CMakeFiles/pcsc.dir
-  POST_BUILD = :
-  PRE_LINK = :
-  TARGET_FILE = libpcsc.a
-  TARGET_PDB = pcsc.a.dbg
-
-# =============================================================================
 # Object build statements for EXECUTABLE target main
 
 
 #############################################
 # Order-only phony target for main
 
-build cmake_object_order_depends_target_main: phony || cmake_object_order_depends_target_pcsc
+build cmake_object_order_depends_target_main: phony || CMakeFiles/main.dir
 
 build CMakeFiles/main.dir/src/main.cc.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/main.cc || cmake_object_order_depends_target_main
   DEP_FILE = CMakeFiles/main.dir/src/main.cc.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/src
+
+build CMakeFiles/main.dir/src/ReadFiles.cpp.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/ReadFiles.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/src/ReadFiles.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/src
+
+build CMakeFiles/main.dir/src/GeneralMethod.cpp.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/GeneralMethod.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/src/GeneralMethod.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/src
+
+build CMakeFiles/main.dir/src/SingleEigenMethod.cpp.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/SingleEigenMethod.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/src/SingleEigenMethod.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/src
+
+build CMakeFiles/main.dir/src/AllEigenMethod.cpp.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/AllEigenMethod.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/src/AllEigenMethod.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/src
+
+build CMakeFiles/main.dir/src/PowerMethod.cpp.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/PowerMethod.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/src/PowerMethod.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/src
+
+build CMakeFiles/main.dir/src/InversePowerMethod.cpp.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/InversePowerMethod.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/src/InversePowerMethod.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/src
+
+build CMakeFiles/main.dir/src/PowerMethodShifted.cpp.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/PowerMethodShifted.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/src/PowerMethodShifted.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/src
+
+build CMakeFiles/main.dir/src/InversePowerMethodShifted.cpp.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/InversePowerMethodShifted.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/src/InversePowerMethodShifted.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/src
+
+build CMakeFiles/main.dir/src/PowerMethodAll.cpp.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/PowerMethodAll.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/src/PowerMethodAll.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
+  OBJECT_DIR = CMakeFiles/main.dir
+  OBJECT_FILE_DIR = CMakeFiles/main.dir/src
+
+build CMakeFiles/main.dir/src/QRMethod.cpp.o: CXX_COMPILER__main_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/QRMethod.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles/main.dir/src/QRMethod.cpp.o.d
   FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
   INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen
   OBJECT_DIR = CMakeFiles/main.dir
@@ -94,9 +131,8 @@ build CMakeFiles/main.dir/src/main.cc.o: CXX_COMPILER__main_Debug /Users/suo/Des
 #############################################
 # Link the executable main
 
-build main: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/src/main.cc.o | libpcsc.a || libpcsc.a
+build main: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/src/main.cc.o CMakeFiles/main.dir/src/ReadFiles.cpp.o CMakeFiles/main.dir/src/GeneralMethod.cpp.o CMakeFiles/main.dir/src/SingleEigenMethod.cpp.o CMakeFiles/main.dir/src/AllEigenMethod.cpp.o CMakeFiles/main.dir/src/PowerMethod.cpp.o CMakeFiles/main.dir/src/InversePowerMethod.cpp.o CMakeFiles/main.dir/src/PowerMethodShifted.cpp.o CMakeFiles/main.dir/src/InversePowerMethodShifted.cpp.o CMakeFiles/main.dir/src/PowerMethodAll.cpp.o CMakeFiles/main.dir/src/QRMethod.cpp.o
   FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2
-  LINK_LIBRARIES = libpcsc.a
   OBJECT_DIR = CMakeFiles/main.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -110,7 +146,7 @@ build main: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/src/main.cc.o 
 #############################################
 # Order-only phony target for matrix
 
-build cmake_object_order_depends_target_matrix: phony || cmake_object_order_depends_target_pcsc
+build cmake_object_order_depends_target_matrix: phony || CMakeFiles/matrix.dir
 
 build CMakeFiles/matrix.dir/src/matrix.cpp.o: CXX_COMPILER__matrix_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/src/matrix.cpp || cmake_object_order_depends_target_matrix
   DEP_FILE = CMakeFiles/matrix.dir/src/matrix.cpp.o.d
@@ -127,9 +163,8 @@ build CMakeFiles/matrix.dir/src/matrix.cpp.o: CXX_COMPILER__matrix_Debug /Users/
 #############################################
 # Link the executable matrix
 
-build matrix: CXX_EXECUTABLE_LINKER__matrix_Debug CMakeFiles/matrix.dir/src/matrix.cpp.o | libpcsc.a || libpcsc.a
+build matrix: CXX_EXECUTABLE_LINKER__matrix_Debug CMakeFiles/matrix.dir/src/matrix.cpp.o
   FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2
-  LINK_LIBRARIES = libpcsc.a
   OBJECT_DIR = CMakeFiles/matrix.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -143,10 +178,52 @@ build matrix: CXX_EXECUTABLE_LINKER__matrix_Debug CMakeFiles/matrix.dir/src/matr
 #############################################
 # Order-only phony target for test_pcsc
 
-build cmake_object_order_depends_target_test_pcsc: phony || cmake_object_order_depends_target_gtest cmake_object_order_depends_target_gtest_main cmake_object_order_depends_target_pcsc
+build cmake_object_order_depends_target_test_pcsc: phony || cmake_object_order_depends_target_gtest cmake_object_order_depends_target_gtest_main
+
+build CMakeFiles/test_pcsc.dir/test/TestInversePowerMethod.cpp.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/TestInversePowerMethod.cpp || cmake_object_order_depends_target_test_pcsc
+  DEP_FILE = CMakeFiles/test_pcsc.dir/test/TestInversePowerMethod.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest/include -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest
+  OBJECT_DIR = CMakeFiles/test_pcsc.dir
+  OBJECT_FILE_DIR = CMakeFiles/test_pcsc.dir/test
+
+build CMakeFiles/test_pcsc.dir/test/TestInversePowerMethodShifted.cpp.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/TestInversePowerMethodShifted.cpp || cmake_object_order_depends_target_test_pcsc
+  DEP_FILE = CMakeFiles/test_pcsc.dir/test/TestInversePowerMethodShifted.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest/include -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest
+  OBJECT_DIR = CMakeFiles/test_pcsc.dir
+  OBJECT_FILE_DIR = CMakeFiles/test_pcsc.dir/test
+
+build CMakeFiles/test_pcsc.dir/test/TestPowerMethod.cpp.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/TestPowerMethod.cpp || cmake_object_order_depends_target_test_pcsc
+  DEP_FILE = CMakeFiles/test_pcsc.dir/test/TestPowerMethod.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest/include -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest
+  OBJECT_DIR = CMakeFiles/test_pcsc.dir
+  OBJECT_FILE_DIR = CMakeFiles/test_pcsc.dir/test
+
+build CMakeFiles/test_pcsc.dir/test/TestPowerMethodAll.cpp.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/TestPowerMethodAll.cpp || cmake_object_order_depends_target_test_pcsc
+  DEP_FILE = CMakeFiles/test_pcsc.dir/test/TestPowerMethodAll.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest/include -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest
+  OBJECT_DIR = CMakeFiles/test_pcsc.dir
+  OBJECT_FILE_DIR = CMakeFiles/test_pcsc.dir/test
+
+build CMakeFiles/test_pcsc.dir/test/TestPowerMethodShifted.cpp.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/TestPowerMethodShifted.cpp || cmake_object_order_depends_target_test_pcsc
+  DEP_FILE = CMakeFiles/test_pcsc.dir/test/TestPowerMethodShifted.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest/include -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest
+  OBJECT_DIR = CMakeFiles/test_pcsc.dir
+  OBJECT_FILE_DIR = CMakeFiles/test_pcsc.dir/test
 
 build CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/TestQRMethod.cpp || cmake_object_order_depends_target_test_pcsc
   DEP_FILE = CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest/include -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest
+  OBJECT_DIR = CMakeFiles/test_pcsc.dir
+  OBJECT_FILE_DIR = CMakeFiles/test_pcsc.dir/test
+
+build CMakeFiles/test_pcsc.dir/test/test.cc.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/test.cc || cmake_object_order_depends_target_test_pcsc
+  DEP_FILE = CMakeFiles/test_pcsc.dir/test/test.cc.o.d
   FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
   INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest/include -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest
   OBJECT_DIR = CMakeFiles/test_pcsc.dir
@@ -160,9 +237,9 @@ build CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o: CXX_COMPILER__test_pcsc_
 #############################################
 # Link the executable test_pcsc
 
-build test_pcsc: CXX_EXECUTABLE_LINKER__test_pcsc_Debug CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o | lib/libgtest_maind.a lib/libgtestd.a libpcsc.a || lib/libgtest_maind.a lib/libgtestd.a libpcsc.a
+build test_pcsc: CXX_EXECUTABLE_LINKER__test_pcsc_Debug CMakeFiles/test_pcsc.dir/test/TestInversePowerMethod.cpp.o CMakeFiles/test_pcsc.dir/test/TestInversePowerMethodShifted.cpp.o CMakeFiles/test_pcsc.dir/test/TestPowerMethod.cpp.o CMakeFiles/test_pcsc.dir/test/TestPowerMethodAll.cpp.o CMakeFiles/test_pcsc.dir/test/TestPowerMethodShifted.cpp.o CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o CMakeFiles/test_pcsc.dir/test/test.cc.o | lib/libgtest_maind.a lib/libgtestd.a || lib/libgtest_maind.a lib/libgtestd.a
   FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2
-  LINK_LIBRARIES = lib/libgtest_maind.a  lib/libgtestd.a  -lpthread  libpcsc.a
+  LINK_LIBRARIES = lib/libgtest_maind.a  lib/libgtestd.a  -lpthread
   OBJECT_DIR = CMakeFiles/test_pcsc.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -244,7 +321,7 @@ build install/strip: phony CMakeFiles/install/strip.util
 #############################################
 # Custom command for CMakeFiles/test
 
-build CMakeFiles/test | ${cmake_ninja_workdir}CMakeFiles/test: CUSTOM_COMMAND test_pcsc || lib/libgtest_maind.a lib/libgtestd.a libpcsc.a test_pcsc
+build CMakeFiles/test | ${cmake_ninja_workdir}CMakeFiles/test: CUSTOM_COMMAND test_pcsc || lib/libgtest_maind.a lib/libgtestd.a test_pcsc
   COMMAND = cd /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug && ./test_pcsc
 
 # =============================================================================
@@ -608,8 +685,6 @@ build libgtest_maind.a: phony lib/libgtest_maind.a
 
 build libgtestd.a: phony lib/libgtestd.a
 
-build pcsc: phony libpcsc.a
-
 # =============================================================================
 # Folder targets.
 
@@ -618,7 +693,7 @@ build pcsc: phony libpcsc.a
 #############################################
 # Folder: /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/cmake-build-debug
 
-build all: phony libpcsc.a main matrix test_pcsc googletest/all
+build all: phony main matrix test_pcsc googletest/all
 
 # =============================================================================
 

@@ -12,27 +12,30 @@ using namespace std;
 using namespace Eigen;
 
 // QR method for calculating eigenvalues
-class QRMethod : public AllEigenMethod {
+template <typename ScalarType>
+class QRMethod : public AllEigenMethod<ScalarType> {
 public:
-    QRMethod(double MaxIter, double tol) : MaxIter_(MaxIter), tol_(tol) {}
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+    using VectorType = Eigen::Vector<ScalarType, -1>;
+    QRMethod(int MaxIter, double tol) : MaxIter_(MaxIter), tol_(tol) {}
     ~QRMethod() override = default;
 
-    double calculateEigenvalue(const MatrixXd& matrix) override {
+    ScalarType calculateEigenvalue(const MatrixType& matrix) override {
         throw std::logic_error("Method not implemented");
     }
-    VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
+    VectorType calculateEigenvalues(const MatrixType& matrix) override {
         // Initialize variables
-        VectorXd eigenvalues;
-        MatrixXd A = matrix;
+        VectorType eigenvalues;
+        MatrixType A = matrix;
         // int n = matrix.rows();
 
         // Perform QR algorithm
         for (int i = 0; i < MaxIter_; i++)
         {
             // Perform QR decomposition
-            HouseholderQR<MatrixXd> qr(A);
-            MatrixXd Q = qr.householderQ();
-            MatrixXd R = qr.matrixQR().triangularView<Upper>();
+            Eigen::HouseholderQR<MatrixType> qr(A);
+            MatrixType Q = qr.householderQ();
+            MatrixType R = qr.matrixQR().template triangularView<Eigen::Upper>();
             // Update matrix
             A = R * Q;
 
@@ -54,7 +57,7 @@ public:
 
         // in descending order using a lambda function
         std::sort(eigenvalues.data(), eigenvalues.data() + eigenvalues.size(),
-                  [](double a, double b) { return std::abs(a) > std::abs(b); });
+                  [](ScalarType a, ScalarType b) { return std::abs(a) > std::abs(b); });
 
         return eigenvalues;
     }

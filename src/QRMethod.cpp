@@ -36,26 +36,7 @@ using namespace Eigen;
 //    return 0;
 //}
 
-int main()
-{
-// Test the different eigenvalue solvers on a simple matrix
-    MatrixXcd A = MatrixXcd(3,3);
-    A << 1, 2, 3,
-            4, 5, 6,
-            7, 8, 10;
-    MatrixXd B = createDoubleMatrix(2);
-    cout << B << endl;
-
-    QRSolver qrSolver;
 //    PowerSolver powerSolver;
 //    InversePowerSolver inversePowerSolver;
 //    PowerShiftSolver powerShiftSolver(1.0);
 //    InversePowerInheritanceSolver inversePowerInheritanceSolver;
-    cout << "Eigenvalues of A (QR method):" << endl << qrSolver.computeEigenvalues(A) << endl;
-//    cout << "Eigenvalues of A (power method):" << endl << powerSolver.computeEigenvalues(A) << endl;
-//    cout << "Eigenvalues of A (inverse power method):" << endl << inversePowerSolver.computeEigenvalues(A) << endl;
-//    cout << "Eigenvalues of A (power method with shift):" << endl << powerShiftSolver.computeEigenvalues(A) << endl;
-//    cout << "Eigenvalues of A (inverse power method using inheritance):" << endl << inversePowerInheritanceSolver.computeEigenvalues(A) << endl;
-
-    return 0;
-}

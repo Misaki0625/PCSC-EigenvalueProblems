@@ -10,14 +10,17 @@
 using namespace std;
 using namespace Eigen;
 
+template <typename ScalarType>
 class GeneralEigenMethod {
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+    using VectorType = Eigen::Vector<ScalarType, -1>;
 public:
     // Calculate the eigenvalues of a given matrix
     GeneralEigenMethod() = default;
     virtual ~GeneralEigenMethod() = default;
 
-    virtual VectorXd calculateEigenvalues(const MatrixXd& matrix) = 0;
-    virtual double calculateEigenvalue(const MatrixXd& matrix) = 0;
+    virtual VectorType calculateEigenvalues(const MatrixType& matrix) = 0;
+    virtual ScalarType calculateEigenvalue(const MatrixType& matrix) = 0;
 };
 
 #endif //PCSC_PROJECT_GENERALMETHOD_H

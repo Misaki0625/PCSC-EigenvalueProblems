@@ -7,38 +7,43 @@
 
 #include <Eigen/Dense>
 #include <iostream>
+#include <type_traits>
 #include "SingleEigenMethod.h"
 using namespace std;
 using namespace Eigen;
 
-class PowerMethodWithShift : public SingleEigenMethod {
+
+template <typename ScalarType>
+class PowerMethodWithShift : public SingleEigenMethod<ScalarType> {
 public:
-    PowerMethodWithShift(double MaxIter, double tol, const std::string& shift) : MaxIter_(MaxIter), tol_(tol), shift_(shift) {}
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+    using VectorType = Eigen::Vector<ScalarType, -1>;
+    PowerMethodWithShift(int MaxIter, double tol, const std::string& shift) : MaxIter_(MaxIter), tol_(tol), shift_(shift) {}
     ~PowerMethodWithShift() override = default;
 
-    Eigen::VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
+    VectorType calculateEigenvalues(const MatrixType& matrix) override {
         throw std::logic_error("Method not implemented");
     }
-    double calculateEigenvalue(const MatrixXd& matrix) override {
+    ScalarType calculateEigenvalue(const MatrixType& matrix) override {
         // VectorXd eigenvalues;
-        MatrixXd A = matrix;
-        double shift;
+        MatrixType A = matrix;
+        ScalarType shift;
 
         if (shift_ == "default"){
             shift = computeShift(A);
         } else{
-            shift = stod(shift_);
+            shift = convertShift(shift_);
         }
 
         int n = A.rows();
         // Initialize the eigenvector with random values
-        VectorXd x = VectorXd::Random(n);
+        VectorType x = VectorType::Random(n);
 
         // Initialize the eigenvalue to zero
-        double lambda = 0;
+        ScalarType lambda = 0;
         int i;
 
-        Eigen::MatrixXd B = A - shift * Eigen::MatrixXd::Identity(A.rows(), A.cols());
+        MatrixType B = A - shift * MatrixType::Identity(A.rows(), A.cols());
 
         // Iterate until convergence or max iterations reached
         for (i = 0; i < MaxIter_; i++)
@@ -49,10 +54,10 @@ public:
             x.normalize();
 
             // Compute the matrix-vector product Ax
-            VectorXd Ax = A * x;
+            VectorType Ax = A * x;
 
             // Compute the eigenvalue as the maximum value of the vector
-            double newLambda = x.transpose() * Ax;
+            ScalarType newLambda = x.transpose() * Ax;
             // double newLambda = (A * x).norm() / x.norm();
 
             // Check for convergence
@@ -70,14 +75,24 @@ public:
         return lambda;
     }
 private:
-    double MaxIter_;
+    int MaxIter_;
     double tol_;
     const std::string& shift_;
-    static double computeShift(const MatrixXd& matrix)
+    static double computeShift(const MatrixType& matrix)
     {
         // Compute the average of the diagonal elements of A
         // as an initial estimate of the shift
-        double shift = matrix.diagonal().mean();
+        ScalarType shift = matrix.diagonal().mean();
+        return shift;
+    };
+    static ScalarType convertShift(const std::string& str)
+    {
+        ScalarType shift;
+        if (std::is_same<ScalarType, double>::value) {
+            shift = stod(str);
+        } else if (std::is_same<ScalarType, std::complex<double>>::value) {
+            std::complex<double>::from_string(str);
+        }
         return shift;
     }
 };

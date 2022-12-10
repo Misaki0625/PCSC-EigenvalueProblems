@@ -12,24 +12,27 @@
 using namespace std;
 using namespace Eigen;
 
-class PowerMethod : public SingleEigenMethod {
+template <typename ScalarType>
+class PowerMethod : public SingleEigenMethod<ScalarType> {
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+    using VectorType = Eigen::Vector<ScalarType, -1>;
 public:
-    PowerMethod(double MaxIter, double tol) : MaxIter_(MaxIter), tol_(tol) {}
+    PowerMethod(int MaxIter, double tol) : MaxIter_(MaxIter), tol_(tol) {}
     ~PowerMethod() {}
 
-    Eigen::VectorXd calculateEigenvalues(const MatrixXd& matrix) override {
+    VectorType calculateEigenvalues(const MatrixType& matrix) override {
         throw std::logic_error("Method not implemented");
     }
-    double calculateEigenvalue(const MatrixXd& matrix) override {
+    ScalarType calculateEigenvalue(const MatrixType& matrix) override {
         // VectorXd eigenvalues;
-        MatrixXd A = matrix;
+        MatrixType A = matrix;
 
         int n = A.rows();
         // Initialize the eigenvector with random values
         VectorXd x = VectorXd::Random(n);
 
         // Initialize the eigenvalue to zero
-        double lambda = 0;
+        ScalarType lambda = 0;
         int i;
         // Iterate until convergence or max iterations reached
         for (i = 0; i < MaxIter_; i++)
@@ -38,7 +41,7 @@ public:
             VectorXd Ax = A * x;
 
             // Compute the eigenvalue as the maximum value of the vector
-            double newLambda = Ax.maxCoeff();
+            ScalarType newLambda = Ax.maxCoeff();
 
             // Check for convergence
             if (abs(newLambda - lambda) < tol_)
@@ -50,9 +53,9 @@ public:
             lambda = newLambda;
             x = Ax / lambda;
     }
-        if (i == MaxIter_){
-            throw std::runtime_error("Convergence not achieved");
-        }
+//        if (i == MaxIter_){
+//            throw std::runtime_error("Convergence not achieved");
+//        }
 
         return lambda;
     }

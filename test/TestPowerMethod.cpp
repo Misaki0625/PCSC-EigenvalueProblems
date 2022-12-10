@@ -19,10 +19,8 @@ protected:
     // You can remove any or all of the following functions if their bodies would
     // be empty.
 
-    PowerMethodTest(): powerMethod(1000, 1e-8) {
+    PowerMethodTest(): MaxIter(1000), tol(1e-8), powerMethod(MaxIter, tol) {
         // You can do set-up work for each test here.
-        MaxIter = 1000;
-        tol = 1e-8;
     }
 
     ~PowerMethodTest() override {
@@ -80,6 +78,7 @@ TEST_F(PowerMethodTest, SelfAdjointMatrix) {
 }
 
 // add more module to test convergence.
+
 
 }
 }

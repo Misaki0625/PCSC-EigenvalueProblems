@@ -13,23 +13,30 @@
 #include <sys/stat.h>
 
 // Base class for file readers
+template <typename ScalarType>
 class FileReader {
 public:
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+
     FileReader() = default;
     virtual ~FileReader() = default;
 
-    virtual Eigen::MatrixXd read(const std::string& filename) = 0;
+    virtual MatrixType read(const std::string& filename) = 0;
 };
 
 // CSV file reader class
-class CSVReader : public FileReader {
+template <typename ScalarType>
+class CSVReader : public FileReader<ScalarType> {
 public:
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+    using RowVectorType = Eigen::RowVector<ScalarType, -1>;
+
     CSVReader() = default;
     ~CSVReader() override = default;
 
-    Eigen::MatrixXd read(const std::string& filename) override {
+    MatrixType read(const std::string& filename) override {
         std::ifstream file(filename);
-        Eigen::MatrixXd matrix;
+        MatrixType matrix;
         std::string line;
 
         if (!file.is_open())
@@ -43,7 +50,7 @@ public:
             // Parse line
             std::stringstream lineStream(line);
             std::string cell;
-            std::vector<double> values;
+            std::vector<ScalarType> values;
             while (std::getline(lineStream, cell, ','))
             {
                 values.push_back(std::stod(cell));
@@ -58,7 +65,7 @@ public:
             {
                 matrix.conservativeResize(matrix.rows() + 1, Eigen::NoChange);
             }
-            matrix.row(matrix.rows() - 1) = Eigen::Map<Eigen::RowVectorXd>(values.data(), values.size());
+            matrix.row(matrix.rows() - 1) = Eigen::Map<RowVectorType>(values.data(), values.size());
         }
 
         // Close file
@@ -72,13 +79,17 @@ public:
 };
 
 // Binary file reader class
-class BinaryReader : public FileReader {
+template <typename ScalarType>
+class BinaryReader : public FileReader<ScalarType> {
 public:
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+    // using VectorType = Eigen::Vector<ScalarType, -1>;
+
     BinaryReader() = default;
     ~BinaryReader() override = default;
 
-    Eigen::MatrixXd read(const std::string &filename) override {
-        Eigen::MatrixXd matrix;
+    MatrixType read(const std::string &filename) override {
+        MatrixType matrix;
         std::ifstream file(filename, std::ios::binary);
         if (!file.is_open()) {
             std::cerr << "Error: Could not open file " << filename << "!" << std::endl;
@@ -90,7 +101,7 @@ public:
             std::cerr << "Error: Could not read the stat of " << filename << "!" << std::endl;
             return {};
         }
-        auto num_elems = stat_buf.st_size / sizeof(double);
+        auto num_elems = stat_buf.st_size / sizeof(ScalarType);
 
         // int num_elems = 0;
 //        double elem;
@@ -102,7 +113,7 @@ public:
         matrix.resize(rows, cols);
         file.clear();
         file.seekg(0, std::ios::beg);
-        file.read((char *) matrix.data(), rows * cols * sizeof(double));
+        file.read((char *) matrix.data(), rows * cols * sizeof(ScalarType));
 
         // Close file
         file.close();

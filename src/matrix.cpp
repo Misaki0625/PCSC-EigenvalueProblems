@@ -9,10 +9,65 @@
 #include <cmath>
 #include <exception>
 #include <algorithm>
+#include <type_traits>
 #include "PowerMethod.h"
 
 using namespace std;
 using namespace Eigen;
+template <typename MatrixType>
+typename MatrixType::Scalar PowerMethod1(const MatrixType& matrix) {
+    // Define a vector to store the current approximation of the eigenvector
+    Eigen::VectorXd x = Eigen::VectorXd::Random(matrix.cols());
+
+    // Define a variable to store the current approximation of the eigenvalue
+    typename MatrixType::Scalar lambda = 0;
+    // Iterate until convergence
+    while (true) {
+        // Compute the next approximation of the eigenvector
+        Eigen::VectorXd xNext = matrix * x;
+
+        // Compute the next approximation of the eigenvalue
+        lambda = xNext.dot(x) / x.dot(x);
+
+        // Check for convergence
+        if (xNext.isApprox(lambda * x)) {
+            // Return the largest eigenvalue
+            return lambda;
+        }
+
+        // Update the current approximation of the eigenvector
+        x = xNext;
+    }
+}
+
+#include <Eigen/Dense>
+#include <iostream>
+
+// Define a template function that uses the QR method iteratively to compute the eigenvalues of a matrix
+template <typename MatrixType>
+Eigen::VectorXcd QRMethod(const MatrixType& matrix)
+{
+    // Define a variable to store the current approximation of the matrix
+    MatrixType A = matrix;
+
+    // Iterate until convergence
+    for (int i=0; i<1000;i++)
+    {
+        // Compute the QR decomposition of the current approximation of the matrix
+//        Eigen::HouseholderQR<MatrixType> qr(A);
+//        MatrixType Q = qr.householderQ();
+//        MatrixType R = qr.matrixQR().template triangularView<Eigen::Upper>();
+//
+//        // Compute the next approximation of the matrix
+//        A = R * Q;
+        MatrixType Q = Eigen::HouseholderQR<MatrixType>(A).householderQ();
+        A = Q.transpose() * A * Q;
+
+    }
+    auto eigenvalues = A.diagonal();
+    return eigenvalues;
+}
+
 
 MatrixXd randInit(const MatrixXd& mat){
     // Number of vectors in the input matrix
@@ -57,6 +112,21 @@ MatrixXd orthogonalize(const MatrixXd& mat) {
         }
     }
     return orth;
+}
+
+template <typename T>
+T from_string(const std::string& str)
+{
+    T result;
+    try
+    {
+        result = std::stod(str);
+    }
+    catch (const std::invalid_argument& e)
+    {
+        std::cout << "Error: " << e.what() << std::endl;
+    }
+    return result;
 }
 
 int main(){
@@ -122,25 +192,41 @@ int main(){
 
     cout << b.eigenvalues() << endl;
 
-    Eigen::Matrix3d m;
-    m << 1, 0, 0,
-            0, 1, 0,
-            0, 0, 1;
-
-    // Create a SelfAdjointEigenSolver object
-    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver;
-
-    // Compute the eigenvalues and eigenvectors of the matrix
-    solver.compute(m);
-
-    // Print the eigenvalues to the console
-    std::cout << "Eigenvalues: " << solver.eigenvalues().transpose() << std::endl;
-
-    // Find the largest eigenvalue
-    double maxEigenvalue = solver.eigenvalues().maxCoeff();
 
     // Print the largest eigenvalue to the console
-    std::cout << "Largest eigenvalue: " << maxEigenvalue << std::endl;
+    // std::cout << "Largest eigenvalue: " << maxEigenvalue << std::endl;
+
+// Define a 3x3 matrix
+    // Define a 3x3 matrix
+    Eigen::MatrixXd m(5,5);
+    m << 1.87,0.19,-1.22,2.03,-1.11,
+    1.17,-10.71,2.23,32.1,-9.23,
+    5.23,2.32,1.09,-8.35,2.90,
+    0.87,2.34,-10.82,-3.45,0,
+    9.12,-3.53,-2.34,6.34,1.57;
+
+    cout << m << endl;
+
+    //complex eigenpower = PowerMethod1(m);
+    //cout << "power: " << eigenpower << endl;
+
+    // Compute the eigenvalues of the matrix using the QR method
+    Eigen::VectorXcd eigenvalues = QRMethod(m);
+
+    // Print the eigenvalues to the console
+    std::cout << "Eigenvalues: " << eigenvalues << std::endl;
+
+    Eigen::EigenSolver<MatrixXd> solver(m);
+    cout << solver.eigenvalues() << endl;
+
+    cout << "real" << m.eigenvalues() << endl;
+
+    std::string str = "3.14";
+    auto d = from_string<double>(str);
+    std::cout << d << std::endl;
+
+    str = "3.14+4.13i";
+
 
     return 0;
 }
