@@ -7,6 +7,7 @@
 
 #include <Eigen/Dense>
 #include <iostream>
+#include <cstdio>
 #include <type_traits>
 #include "SingleEigenMethod.h"
 using namespace std;
@@ -105,7 +106,11 @@ private:
         if (std::is_same<ScalarType, double>::value) {
             shift = stod(str);
         } else if (std::is_same<ScalarType, std::complex<double>>::value) {
-            shift = stold(str);
+            double real, imag;
+            std::sscanf(str.c_str(), "(%lf, %lf)", &real, &imag);
+
+            // Create a std::complex<double> value from the parsed parts
+            std::complex<double> shift(real, imag);
         }
         return shift;
     }

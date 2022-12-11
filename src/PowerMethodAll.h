@@ -76,8 +76,8 @@ private:
         // create a randomly initialized matrix
         MatrixType A = MatrixType::Random(n, n);
 
-        // Make the matrix invertible by adding a multiple of one row to another
-        A.row(1) += 2 * A.row(0);
+//        // Make the matrix invertible by adding a multiple of one row to another
+//        A.row(1) += 2 * A.row(0);
 
         // Check if the matrix is invertible; normally it should be invertible
         for (int i = 0; true; i++)

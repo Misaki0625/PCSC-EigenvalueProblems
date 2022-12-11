@@ -7,6 +7,7 @@
 #include <string>
 #include <Eigen/Dense>
 #include <cmath>
+#include <cstdio>
 #include <exception>
 #include <algorithm>
 #include <type_traits>
@@ -226,6 +227,37 @@ int main(){
     std::cout << d << std::endl;
 
     str = "3.14+4.13i";
+
+    std::complex<double> aa(1.0, 2.0);
+    std::complex<double> bb(3.0, 4.0);
+
+// Use the * operator to perform multiplication
+    std::complex<double> cc = aa - bb;
+    std::complex<double> ee = 1;
+
+// Use std::abs to compute the absolute value
+    auto dd = std::abs(cc - aa);
+    double tol_ = 0;
+
+    if (abs(ee - aa) > tol_)
+    {
+        cout << "no" << endl;
+    }
+
+    cout << dd << endl;
+
+    // Define a string representing a complex number
+    std::string str1 = "(2.5, 1)";
+
+    // Parse the real and imaginary parts of the number
+    double real, imag;
+    std::sscanf(str1.c_str(), "(%lf, %lf)", &real, &imag);
+
+    // Create a std::complex<double> value from the parsed parts
+    std::complex<double> z(real, imag);
+
+    // Print the complex number to the console
+    std::cout << "z = " << z << std::endl;
 
 
     return 0;

@@ -50,14 +50,15 @@ public:
         for (i = 0; i < MaxIter_; i++)
         {
             // Compute the next estimate of the eigenvector
-            // x = (A - lambda * Eigen::MatrixXd::Identity(A.rows(), A.cols())).inverse() * x;
-            x = A.inverse() * x;
+            x = (A - lambda * MatrixType::Identity(n, n)).inverse() * x;
+            // x = A.inverse() * x;
 
             // Normalize the eigenvector
             x.normalize();
 
             // Compute the next estimate of the eigenvalue
-            ScalarType newLambda = x.transpose() * A * x;
+            // ScalarType newLambda = x.transpose() * A * x;
+            ScalarType newLambda = x.dot(A * x) / x.dot(x);
 
             // Check for convergence
             if (abs(newLambda - lambda) < tol_)

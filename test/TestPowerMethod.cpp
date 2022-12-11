@@ -14,16 +14,16 @@ namespace my::project {
 namespace {
 
 // The fixture for testing class Foo.
-class PowerMethodTest : public ::testing::Test {
+class PowerMethodTestDouble : public ::testing::Test {
 protected:
     // You can remove any or all of the following functions if their bodies would
     // be empty.
 
-    PowerMethodTest(): MaxIter(1000), tol(1e-8), powerMethod(MaxIter, tol) {
+    PowerMethodTestDouble(): MaxIter(1000), tol(1e-8), powerMethod(MaxIter, tol) {
         // You can do set-up work for each test here.
     }
 
-    ~PowerMethodTest() override {
+    ~PowerMethodTestDouble() override {
         // You can do clean-up work that doesn't throw exceptions here.
     }
 
@@ -44,12 +44,12 @@ protected:
     // for Foo.
     int MaxIter;
     double tol;
-    PowerMethod powerMethod;
+    PowerMethod<double> powerMethod;
     // Create a SelfAdjointEigenSolver object
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver;
 };
 
-TEST_F(PowerMethodTest, ScalarMatrix) {
+TEST_F(PowerMethodTestDouble, ScalarMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 5);
     solver.compute(I);
     // Find the largest eigenvalue
@@ -58,7 +58,7 @@ TEST_F(PowerMethodTest, ScalarMatrix) {
 
 }
 // Tests that the Foo::Bar() method does Abc.
-TEST_F(PowerMethodTest, UnitMatrix) {
+TEST_F(PowerMethodTestDouble, UnitMatrix) {
     MatrixXd II = Eigen::MatrixXd::Identity(3, 3);
     solver.compute(II);
     // Find the largest eigenvalue
@@ -66,7 +66,7 @@ TEST_F(PowerMethodTest, UnitMatrix) {
     ASSERT_NEAR(powerMethod.calculateEigenvalue(II), maxEigenvalue, 1e-8);
 }
 
-TEST_F(PowerMethodTest, SelfAdjointMatrix) {
+TEST_F(PowerMethodTestDouble, SelfAdjointMatrix) {
     MatrixXd III;
     III << 1,2,3,
            2,4,6,

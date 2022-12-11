@@ -7,6 +7,7 @@
 
 #include <Eigen/Dense>
 #include <iostream>
+#include <complex>
 #include <stdexcept>
 #include "SingleEigenMethod.h"
 using namespace std;
@@ -41,7 +42,8 @@ public:
             VectorType Ax = A * x;
 
             // Compute the eigenvalue as the maximum value of the vector
-            ScalarType newLambda = Ax.maxCoeff();
+            // ScalarType newLambda = Ax.maxCoeff();
+            ScalarType newLambda = Ax.dot(x) / x.dot(x);
 
             // Check for convergence
             if (abs(newLambda - lambda) < tol_)
@@ -53,9 +55,9 @@ public:
             lambda = newLambda;
             x = Ax / lambda;
     }
-//        if (i == MaxIter_){
-//            throw std::runtime_error("Convergence not achieved");
-//        }
+        if (i == MaxIter_){
+            throw std::runtime_error("Convergence not achieved");
+        }
 
         return lambda;
     }

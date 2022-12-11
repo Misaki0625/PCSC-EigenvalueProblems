@@ -221,7 +221,7 @@ template <typename ScalarType>
 std::unique_ptr<GeneralEigenMethod<ScalarType>> createMethod(const std::string& method, int MaxIter, double tol, const std::string& shift)
 {
     if (method == "p") {
-        return std::make_unique<PowerMethod<ScalarType>> (MaxIter, tol);
+        return std::make_unique<PowerMethod<ScalarType>>(MaxIter, tol);
     } else if (method == "ip") {
         return std::make_unique<InversePowerMethod<ScalarType>> (MaxIter, tol);
     } else if (method == "ps") {
@@ -236,7 +236,8 @@ std::unique_ptr<GeneralEigenMethod<ScalarType>> createMethod(const std::string& 
     return nullptr;
 }
 
-void vec2csv(const VectorXd& vec, const std::string& filename)
+template <typename ScalarType>
+void vec2csv(const Eigen::Vector<ScalarType, -1>& vec, const std::string& filename)
 {
     std::ofstream file(filename);
     if (!file.is_open())
@@ -258,8 +259,8 @@ void vec2csv(const VectorXd& vec, const std::string& filename)
 
     file.close();
 }
-
-void double2csv(double value, const std::string& filename)
+template <typename ScalarType>
+void double2csv(ScalarType value, const std::string& filename)
 {
     // Open the CSV file for writing
     std::ofstream file(filename, std::ios::out | std::ios::app);
@@ -280,6 +281,7 @@ bool in_array(const std::string &value, const std::vector<std::string> &array)
 
 int main(int argc, char **argv){
     using ScalarType = std::complex<double>;
+    // using ScalarType = double;
     std::string file;
     std::string scalar;
     std::string algo;
@@ -298,7 +300,7 @@ int main(int argc, char **argv){
     InputParser input(argc, argv);
 
     file = input.assignCmdOption("-f", false, "");
-    scalar = input.assignCmdOption("-scalar", false, "d");
+    scalar = input.assignCmdOption("-scalar", false, "double");
     algo = input.assignCmdOption("-algo", true, "qr");
     outfile = input.assignCmdOption("-o", true, "output.csv");
     MaxIter = stoi(input.assignCmdOption("-MaxIter", true, "10000"));
@@ -310,7 +312,7 @@ int main(int argc, char **argv){
 
     // FileReader<double> reader = createReader(file);
     if (scalar == "double") {
-
+        using ScalarType = double;
     } else if(scalar == "complex") {
         using ScalarType = std::complex<double>;
     }
@@ -342,7 +344,7 @@ int main(int argc, char **argv){
         if (identifyFileType(outfile)!="csv"){
             throw std::invalid_argument( "Output file must be CSV file! ");
         } else {
-            //double2csv(output, outfile);
+            double2csv(output, outfile);
             Configs::printWriteFile(outfile);
         }
     } else if (in_array(algo, aAlgo)){
@@ -352,14 +354,14 @@ int main(int argc, char **argv){
         if (identifyFileType(outfile)!="csv"){
             throw std::invalid_argument( "Output file must be CSV file! ");
         } else {
-            // vec2csv(output, outfile);
+            vec2csv(output, outfile);
             Configs::printWriteFile(outfile);
         }
     }
 
-    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
-    MatrixType p = MatrixType::Random(3, 3);
-    cout << p << endl;
+//    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+//    MatrixType p = MatrixType::Random(3, 3);
+//    cout << p << endl;
 
     // use template? guess not
     // test if eigenvalues can be returned successfully
