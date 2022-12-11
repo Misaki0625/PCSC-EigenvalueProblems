@@ -280,8 +280,8 @@ bool in_array(const std::string &value, const std::vector<std::string> &array)
 
 
 int main(int argc, char **argv){
-    using ScalarType = std::complex<double>;
-    // using ScalarType = double;
+    // using ScalarType = std::complex<double>;
+    using ScalarType = double;
     std::string file;
     std::string scalar;
     std::string algo;
@@ -310,12 +310,18 @@ int main(int argc, char **argv){
     Config a = {file, scalar, algo, outfile, shift, MaxIter, tol};
     Configs::printConfig(a);
 
+    std::vector<std::string> noComplexAlgo {"ps", "ips", "pa"};
+    if ((scalar == "complex") && (in_array(algo, noComplexAlgo))){
+        throw std::invalid_argument("Complex scalar type not supported by this algorithm");
+    }
+
     // FileReader<double> reader = createReader(file);
     if (scalar == "double") {
         using ScalarType = double;
     } else if(scalar == "complex") {
         using ScalarType = std::complex<double>;
     }
+
     auto reader = createReader<ScalarType>(file);
     if (reader == nullptr) {
         std::cout << "Invalid file type" << std::endl;
@@ -385,29 +391,43 @@ int main(int argc, char **argv){
 
 // Define a 3x3 matrix
     Eigen::Matrix3d m;
-    m << 1,0,0,
-    0,1,0,
-    0,0,1;
+    m << 1,2,3,
+    4,5,6,
+    7,8,10;
 
-    // Check if the matrix is unitary
-    bool isUnitary = matrix.isUnitary(0.5);
+    MatrixXcd III(2,2);
+    III(0,0) = std::complex<double>(1.0, 1.0);
+    III(0,1) = std::complex<double>(1.0, -2.0);
+    III(1,0) = std::complex<double>(1.0, -2.0);
+    III(1,1) = std::complex<double>(-1.0, -1.0);
+    PowerMethodWithShift<double> method(10000, 1e-8,"10");
+    // auto real_value = std::complex<double>{-1, 2};
+    auto real_value = m.eigenvalues();
+    auto compute = method.calculateEigenvalue(m);
+    cout << "compute" << compute << endl;
+    cout << "read_value" << real_value << endl;
+
+    MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
+
+    PowerMethodAll<double> pm(10000, 1e-8);
+    // VectorXcd compute = pm.calculateEigenvalues(m);
+    cout << "real" << m.eigenvalues() << endl;
+    cout << "compute" << compute << endl;
+    // cout << "norm" << (compute-m.eigenvalues()).norm() << endl;
 
     // Print the result to the console
-    std::cout << "Is unitary: " << isUnitary << std::endl;
+    cout << m << endl;
+    std::cout << m.eigenvalues()(1).real() << std::endl;
 
-    // std::cout << m.eigenvalues() << std::endl;
+    Matrix2d pp;
+    pp << 1,2,
+    2,1;
 
-//    try
-//    {
-//        // Call the MyMethod() function
-//        PowerMethod cc(1000, 1e-8);
-//        cc.calculateEigenvalues(matrix);
-//    }
-//    catch (const std::logic_error& e)
-//    {
-//        // Print the error message to the console
-//        std::cerr << "Error: " << e.what() << std::endl;
-//    }
+    // cout << pp.eigenvalues() << endl;
+
+    VectorXcd rea(2);
+    rea << std::complex<double>(3,0), std::complex<double>(-1,2);
+    cout << rea << endl;
 
     return 0;
 }

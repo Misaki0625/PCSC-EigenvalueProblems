@@ -35,7 +35,6 @@ public:
         } else{
             shift = convertShift(shift_);
         }
-        cout << shift << endl;
 
         int n = A.rows();
         // Initialize the eigenvector with random values
@@ -70,7 +69,6 @@ public:
 
             lambda = newLambda;
         }
-        cout << i << endl;
 
         if (i == MaxIter_){
             throw std::runtime_error("Convergence not achieved");

@@ -222,6 +222,13 @@ build CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o: CXX_COMPILER__test_pcsc_
   OBJECT_DIR = CMakeFiles/test_pcsc.dir
   OBJECT_FILE_DIR = CMakeFiles/test_pcsc.dir/test
 
+build CMakeFiles/test_pcsc.dir/test/TestReadFiles.cpp.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/TestReadFiles.cpp || cmake_object_order_depends_target_test_pcsc
+  DEP_FILE = CMakeFiles/test_pcsc.dir/test/TestReadFiles.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
+  INCLUDES = -I/Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/eigen -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest/include -isystem /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/googletest/googletest
+  OBJECT_DIR = CMakeFiles/test_pcsc.dir
+  OBJECT_FILE_DIR = CMakeFiles/test_pcsc.dir/test
+
 build CMakeFiles/test_pcsc.dir/test/test.cc.o: CXX_COMPILER__test_pcsc_Debug /Users/suo/Desktop/proj_math458/PCSC-EigenvalueProblems/test/test.cc || cmake_object_order_depends_target_test_pcsc
   DEP_FILE = CMakeFiles/test_pcsc.dir/test/test.cc.o.d
   FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2 -std=gnu++17
@@ -237,7 +244,7 @@ build CMakeFiles/test_pcsc.dir/test/test.cc.o: CXX_COMPILER__test_pcsc_Debug /Us
 #############################################
 # Link the executable test_pcsc
 
-build test_pcsc: CXX_EXECUTABLE_LINKER__test_pcsc_Debug CMakeFiles/test_pcsc.dir/test/TestInversePowerMethod.cpp.o CMakeFiles/test_pcsc.dir/test/TestInversePowerMethodShifted.cpp.o CMakeFiles/test_pcsc.dir/test/TestPowerMethod.cpp.o CMakeFiles/test_pcsc.dir/test/TestPowerMethodAll.cpp.o CMakeFiles/test_pcsc.dir/test/TestPowerMethodShifted.cpp.o CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o CMakeFiles/test_pcsc.dir/test/test.cc.o | lib/libgtest_maind.a lib/libgtestd.a || lib/libgtest_maind.a lib/libgtestd.a
+build test_pcsc: CXX_EXECUTABLE_LINKER__test_pcsc_Debug CMakeFiles/test_pcsc.dir/test/TestInversePowerMethod.cpp.o CMakeFiles/test_pcsc.dir/test/TestInversePowerMethodShifted.cpp.o CMakeFiles/test_pcsc.dir/test/TestPowerMethod.cpp.o CMakeFiles/test_pcsc.dir/test/TestPowerMethodAll.cpp.o CMakeFiles/test_pcsc.dir/test/TestPowerMethodShifted.cpp.o CMakeFiles/test_pcsc.dir/test/TestQRMethod.cpp.o CMakeFiles/test_pcsc.dir/test/TestReadFiles.cpp.o CMakeFiles/test_pcsc.dir/test/test.cc.o | lib/libgtest_maind.a lib/libgtestd.a || lib/libgtest_maind.a lib/libgtestd.a
   FLAGS = -g -arch x86_64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.2
   LINK_LIBRARIES = lib/libgtest_maind.a  lib/libgtestd.a  -lpthread
   OBJECT_DIR = CMakeFiles/test_pcsc.dir

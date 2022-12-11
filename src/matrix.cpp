@@ -259,6 +259,44 @@ int main(){
     // Print the complex number to the console
     std::cout << "z = " << z << std::endl;
 
+    MatrixXcd _A(3, 3);
+    _A << complex<double>(1, 2), complex<double>(3, 4), complex<double>(5, 6),
+            complex<double>(7, 8), complex<double>(9, 10), complex<double>(11, 12),
+            complex<double>(13, 14), complex<double>(15, 16), complex<double>(17, 18);
+
+    // define the maximum number of iterations and tolerance
+    int maxIter = 1000;
+    double tolerance = 1e-6;
+
+    // initialize x and eigenvalue
+    VectorXcd x(3);
+    x.setRandom();
+    complex<double> eigenvalue;
+
+    // power method
+    for (int i = 0; i < maxIter; i++) {
+        // compute y = A * x
+        VectorXcd y = _A * x;
+
+        // compute the largest eigenvalue as the norm of y
+        // divided by the norm of x
+        complex<double> lambda = y.norm() / x.norm();
+
+        // check for convergence
+        if (abs(lambda - eigenvalue) < tolerance) {
+            break;
+        }
+
+        // update x and eigenvalue
+        x = y / y.norm();
+        eigenvalue = lambda;
+    }
+
+    // print the largest eigenvalue
+    cout << "Largest eigenvalue: " << eigenvalue << endl;
+    cout << _A.eigenvalues() << endl;
+
+
 
     return 0;
 }

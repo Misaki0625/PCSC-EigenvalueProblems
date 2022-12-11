@@ -31,6 +31,7 @@ public:
         int n = A.rows();
         // Initialize the eigenvector with random values
         VectorType x = VectorType::Random(n);
+        x.normalize();
 
         // Initialize the eigenvalue to zero
         ScalarType lambda = 0;
@@ -41,9 +42,11 @@ public:
             // Compute the matrix-vector product Ax
             VectorType Ax = A * x;
 
-            // Compute the eigenvalue as the maximum value of the vector
-            // ScalarType newLambda = Ax.maxCoeff();
+           // Compute the eigenvalue as the maximum value of the vector
             ScalarType newLambda = Ax.dot(x) / x.dot(x);
+            // x = Ax / Ax.norm();
+
+            // ScalarType newLambda = x.transpose() * A.dot(x);
 
             // Check for convergence
             if (abs(newLambda - lambda) < tol_)
@@ -54,6 +57,7 @@ public:
             // Update the eigenvalue and normalize the vector
             lambda = newLambda;
             x = Ax / lambda;
+            x.normalize();
     }
         if (i == MaxIter_){
             throw std::runtime_error("Convergence not achieved");
