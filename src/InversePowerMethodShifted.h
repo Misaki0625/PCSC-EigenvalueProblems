@@ -19,7 +19,7 @@ class InversePowerMethodWithShift : public SingleEigenMethod<ScalarType> {
 public:
     using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
     using VectorType = Eigen::Vector<ScalarType, -1>;
-    InversePowerMethodWithShift(int MaxIter, double tol, const std::string& shift) : MaxIter_(MaxIter), tol_(tol), shift_(shift) {}
+    InversePowerMethodWithShift(int MaxIter, double tol, ScalarType shift) : MaxIter_(MaxIter), tol_(tol), shift_(shift) {}
     ~InversePowerMethodWithShift() override = default;
 
     VectorType calculateEigenvalues(const MatrixType& matrix) override {
@@ -28,13 +28,13 @@ public:
     ScalarType calculateEigenvalue(const MatrixType& matrix) override {
         // VectorXd eigenvalues;
         MatrixType A = matrix;
-        ScalarType shift;
+        // ScalarType shift;
 
-        if (shift_ == "default"){
-            shift = computeShift(A);
-        } else{
-            shift = convertShift(shift_);
-        }
+//        if (shift_ == "default"){
+//            shift = computeShift(A);
+//        } else{
+//            shift = convertShift(shift_);
+//        }
 
         int n = A.rows();
         // Initialize the eigenvector with random values
@@ -46,7 +46,7 @@ public:
             throw std::invalid_argument("Input matrix for this algorithm must be linearly independent");
         }
 
-        MatrixType inv = (A - shift * MatrixType::Identity(A.rows(), A.cols())).inverse();
+        MatrixType inv = (A - shift_ * MatrixType::Identity(A.rows(), A.cols())).inverse();
 
         // Initialize the eigenvalue to zero
         ScalarType lambda = 0;
@@ -92,7 +92,7 @@ public:
 private:
     int MaxIter_;
     double tol_;
-    const std::string shift_;
+    ScalarType shift_;
     static ScalarType computeShift(const MatrixType& matrix)
     {
         // Compute the average of the diagonal elements of A

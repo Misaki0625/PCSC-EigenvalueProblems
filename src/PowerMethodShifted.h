@@ -19,7 +19,7 @@ class PowerMethodWithShift : public SingleEigenMethod<ScalarType> {
 public:
     using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
     using VectorType = Eigen::Vector<ScalarType, -1>;
-    PowerMethodWithShift(int MaxIter, double tol, const std::string& shift) : MaxIter_(MaxIter), tol_(tol), shift_(shift) {}
+    PowerMethodWithShift(int MaxIter, double tol, ScalarType shift) : MaxIter_(MaxIter), tol_(tol), shift_(shift) {}
     ~PowerMethodWithShift() override = default;
 
     VectorType calculateEigenvalues(const MatrixType& matrix) override {
@@ -28,13 +28,7 @@ public:
     ScalarType calculateEigenvalue(const MatrixType& matrix) override {
         // VectorXd eigenvalues;
         MatrixType A = matrix;
-        ScalarType shift;
-
-        if (shift_ == "default"){
-            shift = computeShift(A);
-        } else{
-            shift = convertShift(shift_);
-        }
+        // ScalarType shift;
 
         int n = A.rows();
         // Initialize the eigenvector with random values
@@ -44,7 +38,7 @@ public:
         ScalarType lambda = 0;
         int i;
 
-        MatrixType B = A - shift * MatrixType::Identity(A.rows(), A.cols());
+        MatrixType B = A - shift_ * MatrixType::Identity(A.rows(), A.cols());
 
         // Iterate until convergence or max iterations reached
         for (i = 0; i < MaxIter_; i++)
@@ -78,7 +72,7 @@ public:
 private:
     int MaxIter_;
     double tol_;
-    const std::string& shift_;
+    ScalarType shift_;
     static ScalarType computeShift(const MatrixType& matrix)
     {
         // Compute the average of the diagonal elements of A
@@ -92,11 +86,7 @@ private:
         if (std::is_same<ScalarType, double>::value) {
             shift = stod(str);
         } else if (std::is_same<ScalarType, std::complex<double>>::value) {
-            double real, imag;
-            std::sscanf(str.c_str(), "(%lf, %lf)", &real, &imag);
-
-            // Create a std::complex<double> value from the parsed parts
-            std::complex<double> shift(real, imag);
+            std::complex<double> shift(stod(str), 0.0);
         }
         return shift;
     }

@@ -218,7 +218,7 @@ std::unique_ptr<FileReader<ScalarType>> createReader(const std::string& file)
 
 //solver function by algorithm and max iteration
 template <typename ScalarType>
-std::unique_ptr<GeneralEigenMethod<ScalarType>> createMethod(const std::string& method, int MaxIter, double tol, const std::string& shift)
+std::unique_ptr<GeneralEigenMethod<ScalarType>> createMethod(const std::string& method, int MaxIter, double tol, ScalarType shift)
 {
     if (method == "p") {
         return std::make_unique<PowerMethod<ScalarType>>(MaxIter, tol);
@@ -277,11 +277,121 @@ bool in_array(const std::string &value, const std::vector<std::string> &array)
     return std::find(array.begin(), array.end(), value) != array.end();
 }
 
+void computeDouble(const std::string &file,
+                   const std::string &algo,
+                   int MaxIter,
+                   double tol,
+                   const std::string &shift,
+                   const std::string &outfile) {
+    auto reader = createReader<double>(file);
+    if (reader == nullptr) {
+        std::cout << "Invalid file type" << std::endl;
+        std::cout << "Please provide a csv or binary file" << std::endl;
+        throw std::invalid_argument("Please provide a csv or binary file");
+    }
+    auto matrix = reader->read(file);
+    Configs::printMatrix(matrix);
+
+    double shiftDouble;
+    if (shift == "default") {
+        shiftDouble = matrix.diagonal().mean();
+    } else {
+        shiftDouble = stod(shift);
+    }
+
+    auto solver = createMethod<double>(algo, MaxIter, tol, shiftDouble);
+    if (solver == nullptr) {
+        throw std::invalid_argument("Invalid algorithm type");
+    }
+
+    std::vector<std::string> sAlgo {"p", "ip", "ps", "ips"};
+    std::vector<std::string> aAlgo {"qr", "pa"};
+
+    if (in_array(algo, sAlgo))
+    {
+        cout << "** This algorithm is to compute a single eigenvalue **"<< endl;
+        auto output = solver->calculateEigenvalue(matrix);
+        Configs::printOutputScalar(output);
+        if (identifyFileType(outfile)!="csv"){
+            throw std::invalid_argument( "Output file must be CSV file! ");
+        } else {
+            double2csv(output, outfile);
+        }
+    } else if (in_array(algo, aAlgo)){
+        cout << "** This algorithm is to compute all eigenvalues **"<< endl;
+        auto output = solver->calculateEigenvalues(matrix);
+        Configs::printOutputVector(output);
+        if (identifyFileType(outfile)!="csv"){
+            throw std::invalid_argument( "Output file must be CSV file! ");
+        } else {
+            vec2csv(output, outfile);
+        }
+    }
+
+    VectorXcd eigenvaluestrue = matrix.eigenvalues();
+    cout << "real" << eigenvaluestrue << endl;
+}
+
+void computeComplex(const std::string &file,
+                    const std::string &algo,
+                    int MaxIter,
+                    double tol,
+                    const std::string &shift,
+                    const std::string &outfile) {
+    auto reader = createReader<std::complex<double>>(file);
+    if (reader == nullptr) {
+        std::cout << "Invalid file type" << std::endl;
+        std::cout << "Please provide a csv or binary file" << std::endl;
+        throw std::invalid_argument("Please provide a csv or binary file");
+    }
+    auto matrix = reader->read(file);
+    Configs::printMatrix(matrix);
+
+    std::complex<double> shiftComplex;
+    if (shift == "default") {
+        shiftComplex = matrix.diagonal().mean();
+    } else {
+        shiftComplex = std::complex<double>(stod(shift),0.0);
+    }
+
+    auto solver = createMethod<std::complex<double>>(algo, MaxIter, tol, shiftComplex);
+    if (solver == nullptr) {
+        throw std::invalid_argument("Invalid algorithm type");
+    }
+
+    std::vector<std::string> sAlgo {"p", "ip", "ps", "ips"};
+    std::vector<std::string> aAlgo {"qr", "pa"};
+
+    if (in_array(algo, sAlgo))
+    {
+        cout << "** This algorithm is to compute a single eigenvalue **"<< endl;
+        auto output = solver->calculateEigenvalue(matrix);
+        Configs::printOutputScalar(output);
+        if (identifyFileType(outfile)!="csv"){
+            throw std::invalid_argument( "Output file must be CSV file! ");
+        } else {
+            double2csv(output, outfile);
+        }
+    } else if (in_array(algo, aAlgo)){
+        cout << "** This algorithm is to compute all eigenvalues **"<< endl;
+        auto output = solver->calculateEigenvalues(matrix);
+        Configs::printOutputVector(output);
+        if (identifyFileType(outfile)!="csv"){
+            throw std::invalid_argument( "Output file must be CSV file! ");
+        } else {
+            vec2csv(output, outfile);
+        }
+    }
+
+    VectorXcd eigenvaluestrue = matrix.eigenvalues();
+    cout << "real" << eigenvaluestrue << endl;
+}
+
 
 
 int main(int argc, char **argv){
-    // using ScalarType = std::complex<double>;
-    using ScalarType = double;
+//    using ScalarType = std::complex<double>;
+    // using ScalarType = double;
     std::string file;
     std::string scalar;
     std::string algo;
@@ -289,13 +399,6 @@ int main(int argc, char **argv){
     std::string shift;
     int MaxIter;
     double tol;
-
-//    std::map<std::string, std::any> config;
-//    config["max_iterations"] = "kkk";
-//    config["tolerance"] = "qaew";
-
-//    ConfigPrinter printer(config);
-//    printer.print();
 
     InputParser input(argc, argv);
 
@@ -317,53 +420,54 @@ int main(int argc, char **argv){
 
     // FileReader<double> reader = createReader(file);
     if (scalar == "double") {
-        using ScalarType = double;
+        computeDouble(file, algo, MaxIter, tol, shift, outfile);
     } else if(scalar == "complex") {
-        using ScalarType = std::complex<double>;
+        computeComplex(file, algo, MaxIter, tol, shift, outfile);
     }
 
-    auto reader = createReader<ScalarType>(file);
-    if (reader == nullptr) {
-        std::cout << "Invalid file type" << std::endl;
-        std::cout << "Please provide a csv or binary file" << std::endl;
-        return 1;
-    }
-    auto matrix = reader->read(file);
-    Configs::printMatrix(matrix);
-
-    auto solver = createMethod<ScalarType>(algo, MaxIter, tol, shift);
-    if (solver == nullptr) {
-        std::cout << "Invalid algorithm type" << std::endl;
-        return 1;
-    }
-
-    // a configuration print need to be written as a function/class
-
-    std::vector<std::string> sAlgo {"p", "ip", "ps", "ips"};
-    std::vector<std::string> aAlgo {"qr", "pa"};
-
-    if (in_array(algo, sAlgo))
-    {
-        cout << "** This algorithm is to compute a single eigenvalue **"<< endl;
-        auto output = solver->calculateEigenvalue(matrix);
-        Configs::printOutputScalar(output);
-        if (identifyFileType(outfile)!="csv"){
-            throw std::invalid_argument( "Output file must be CSV file! ");
-        } else {
-            double2csv(output, outfile);
-            Configs::printWriteFile(outfile);
-        }
-    } else if (in_array(algo, aAlgo)){
-        cout << "** This algorithm is to compute all eigenvalues **"<< endl;
-        auto output = solver->calculateEigenvalues(matrix);
-        Configs::printOutputVector(output);
-        if (identifyFileType(outfile)!="csv"){
-            throw std::invalid_argument( "Output file must be CSV file! ");
-        } else {
-            vec2csv(output, outfile);
-            Configs::printWriteFile(outfile);
-        }
-    }
+//    auto reader = createReader<ScalarType>(file);
+//    if (reader == nullptr) {
+//        std::cout << "Invalid file type" << std::endl;
+//        std::cout << "Please provide a csv or binary file" << std::endl;
+//        return 1;
+//    }
+//    auto matrix = reader->read(file);
+//    Configs::printMatrix(matrix);
+//
+//    auto solver = createMethod<ScalarType>(algo, MaxIter, tol, shift);
+//    if (solver == nullptr) {
+//        std::cout << "Invalid algorithm type" << std::endl;
+//        return 1;
+//    }
+//
+//    // a configuration print need to be written as a function/class
+//
+//    std::vector<std::string> sAlgo {"p", "ip", "ps", "ips"};
+//    std::vector<std::string> aAlgo {"qr", "pa"};
+//
+//    if (in_array(algo, sAlgo))
+//    {
+//        cout << "** This algorithm is to compute a single eigenvalue **"<< endl;
+//        auto output = solver->calculateEigenvalue(matrix);
+//        Configs::printOutputScalar(output);
+//        if (identifyFileType(outfile)!="csv"){
+//            throw std::invalid_argument( "Output file must be CSV file! ");
+//        } else {
+//            double2csv(output, outfile);
+//            Configs::printWriteFile(outfile);
+//        }
+//    } else if (in_array(algo, aAlgo)){
+//        cout << "** This algorithm is to compute all eigenvalues **"<< endl;
+//        auto output = solver->calculateEigenvalues(matrix);
+//        Configs::printOutputVector(output);
+//        if (identifyFileType(outfile)!="csv"){
+//            throw std::invalid_argument( "Output file must be CSV file! ");
+//        } else {
+//            vec2csv(output, outfile);
+//            Configs::printWriteFile(outfile);
+//        }
+//    }
+    Configs::printWriteFile(outfile);
 
 //    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
 //    MatrixType p = MatrixType::Random(3, 3);
@@ -373,18 +477,18 @@ int main(int argc, char **argv){
     // test if eigenvalues can be returned successfully
 
     // real eigenvalues computed by Eigen library
-    VectorXcd eigenvaluestrue = matrix.eigenvalues();
-    cout << "real" << eigenvaluestrue << endl;
-    cout << "largest: " << eigenvaluestrue.cwiseAbs().maxCoeff() << endl;
-    cout << "smallest: " << eigenvaluestrue.cwiseAbs().minCoeff() << endl;
-    auto k = eigenvaluestrue.cwiseAbs();
-
-    if (abs(matrix.determinant()) > 1e-8) //
-    {
-        cout << "The matrix is invertible" << endl;
-    } else{
-        cout << "Not Invertible" << endl;
-    };
+//    VectorXcd eigenvaluestrue = matrix.eigenvalues();
+//    cout << "real" << eigenvaluestrue << endl;
+//    cout << "largest: " << eigenvaluestrue.cwiseAbs().maxCoeff() << endl;
+//    cout << "smallest: " << eigenvaluestrue.cwiseAbs().minCoeff() << endl;
+//    auto k = eigenvaluestrue.cwiseAbs();
+//
+//    if (abs(matrix.determinant()) > 1e-8) //
+//    {
+//        cout << "The matrix is invertible" << endl;
+//    } else{
+//        cout << "Not Invertible" << endl;
+//    };
 
 //    delete solver;
 //    solver = nullptr;
@@ -392,15 +496,15 @@ int main(int argc, char **argv){
 // Define a 3x3 matrix
     Eigen::Matrix3d m;
     m << 1,2,3,
-    4,5,6,
-    7,8,10;
+         2,5,6,
+         3,6,4;
 
     MatrixXcd III(2,2);
     III(0,0) = std::complex<double>(1.0, 1.0);
     III(0,1) = std::complex<double>(1.0, -2.0);
     III(1,0) = std::complex<double>(1.0, -2.0);
     III(1,1) = std::complex<double>(-1.0, -1.0);
-    PowerMethodWithShift<double> method(10000, 1e-8,"10");
+    PowerMethodWithShift<double> method(10000, 1e-8, -10);
     // auto real_value = std::complex<double>{-1, 2};
     auto real_value = m.eigenvalues();
     auto compute = method.calculateEigenvalue(m);
@@ -428,6 +532,13 @@ int main(int argc, char **argv){
     VectorXcd rea(2);
     rea << std::complex<double>(3,0), std::complex<double>(-1,2);
     cout << rea << endl;
+
+    auto shift1 = III.diagonal().mean();
+    double shift2 = 2;
+    cout << m.diagonal().mean() << endl;
+    cout << III.diagonal().mean() << endl;
+
+    cout << III - shift2 * MatrixXcd::Identity(III.rows(), III.cols()) << endl;
 
     return 0;
 }

@@ -17,7 +17,7 @@ protected:
     // You can remove any or all of the following functions if their bodies would
     // be empty.
 
-    ReadFileTestCSV() :  reader() {
+    ReadFileTestCSV() :  readerI(), readerII() {
         // You can do set-up work for each test here.
     }
 
@@ -40,16 +40,28 @@ protected:
 
     // Class members declared here can be used by all tests in the test suite
     // for Foo.
-    CSVReader<double> reader;
+    CSVReader<double> readerI;
+    CSVReader<std::complex<double>> readerII;
 };
 
 TEST_F(ReadFileTestCSV, readDoubleMatrix) {
-    MatrixXd m1(2,2);
-    MatrixXd m2(2,2);
-    m1 << 1,2,3,4;
-    m2 << 1,2,3,4;
+    auto m1 = readerI.read("matrix.csv");
+    MatrixXd m2(3,3);
+    m2 << 1,2,3,
+            4,5,6,
+            7,8,10;
     EXPECT_EQ(m1, m2);
 }
+
+TEST_F(ReadFileTestCSV, readComplexMatrix) {
+    auto m1 = readerII.read("matrix.csv");
+    MatrixXcd m2(3,3);
+    m2 << 1,2,3,
+            4,5,6,
+            7,8,10;
+    EXPECT_EQ(m1, m2);
+}
+
 
 // The fixture for testing class Foo.
 class ReadFileTestBinary : public ::testing::Test {
@@ -86,17 +98,18 @@ protected:
 };
 
 TEST_F(ReadFileTestBinary, readDoubleMatrix) {
-    MatrixXd m1(2,2);
-    MatrixXd m2(2,2);
-    m1 << 1,2,3,4;
-    m2 << 1,2,3,4;
+    auto m1 = readerI.read("data.bin");
+    MatrixXd m2(3,3);
+    m2 << 1,2,4,4,5,6,7,8,10;
     EXPECT_EQ(m1, m2);
 }
 TEST_F(ReadFileTestBinary, readComplexMatrix) {
-    MatrixXd m1(2,2);
-    MatrixXd m2(2,2);
-    m1 << 1,2,3,4;
-    m2 << 1,2,3,4;
+    auto m1 = readerII.read("data.bin");
+    MatrixXcd m2(2,2);
+    m2(0,0) = std::complex<double>(1.0, 4.0);
+    m2(0,1) = std::complex<double>(5.0, 8.0);
+    m2(1,0) = std::complex<double>(7.0, 2.0);
+    m2(1,1) = std::complex<double>(4.0, 6.0);
     EXPECT_EQ(m1, m2);
 }
 

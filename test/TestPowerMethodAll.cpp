@@ -52,7 +52,7 @@ TEST_F(PowerMethodAllTest, invalidMatrix) {
     ASSERT_THROW(method.calculateEigenvalues(I), std::invalid_argument);
 }
 
-TEST_F(PowerMethodAllTest, computeLargestEigenvalue) {
+TEST_F(PowerMethodAllTest, computeAllEigenvalue) {
     MatrixXd II(3, 3);
     II << 1,2,3,
           4,5,6,

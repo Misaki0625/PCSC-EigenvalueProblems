@@ -4,6 +4,7 @@
 # include <gtest/gtest.h>
 # include <Eigen/Dense>
 # include "../src/PowerMethodShifted.h"
+# include "../src/InversePowerMethodShifted.h"
 
 using namespace std;
 using namespace Eigen;
@@ -17,10 +18,9 @@ protected:
     // You can remove any or all of the following functions if their bodies would
     // be empty.
 
-    PowerMethodShiftedTest() :  methodI(10000, 1e-8, "default"),
-                                methodII(10000, 1e-8, "15"),
-                                methodIII(10000, 1e-8, "0"),
-                                methodIV(10000, 1e-8, "-10"){
+    PowerMethodShiftedTest() :  methodI(10000, 1e-8, 15),
+                                methodII(10000, 1e-8, 0),
+                                methodIII(10000, 1e-8, -10) {
         // You can do set-up work for each test here.
     }
 
@@ -46,7 +46,6 @@ protected:
     PowerMethodWithShift<double> methodI;
     PowerMethodWithShift<double> methodII;
     PowerMethodWithShift<double> methodIII;
-    PowerMethodWithShift<double> methodIV;
 };
 
 TEST_F(PowerMethodShiftedTest, noImplementedMethod) {
@@ -55,7 +54,7 @@ TEST_F(PowerMethodShiftedTest, noImplementedMethod) {
 
 TEST_F(PowerMethodShiftedTest, constantMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
-    ASSERT_NEAR(methodI.calculateEigenvalue(I), 0, 1e-8);
+    ASSERT_NEAR(methodI.calculateEigenvalue(I), 3, 1e-6);
 }
 
 TEST_F(PowerMethodShiftedTest, computeLargestEigenvalue) {
@@ -63,7 +62,7 @@ TEST_F(PowerMethodShiftedTest, computeLargestEigenvalue) {
     II << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodII.calculateEigenvalue(II), II.eigenvalues()(0).real(), 1e-8);
+    ASSERT_NEAR(methodI.calculateEigenvalue(II), II.eigenvalues()(0).real(), 1e-6);
 }
 
 TEST_F(PowerMethodShiftedTest, computeMiddleEigenvalue) {
@@ -71,17 +70,15 @@ TEST_F(PowerMethodShiftedTest, computeMiddleEigenvalue) {
     III << 1,2,3,
             4,5,6,
             7,8,10;
-    double real = III.eigenvalues()(2).real();
-    double compute = methodIII.calculateEigenvalue(III);
-    ASSERT_NEAR(abs(real-compute), 0.0, 1e-8);
+    ASSERT_NEAR(methodII.calculateEigenvalue(III), III.eigenvalues()(2).real(), 1e-6);
 }
 
 TEST_F(PowerMethodShiftedTest, computeSmallestEigenvalue) {
-    Matrix3d IV;
+    MatrixXd IV(3, 3);
     IV << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodIV.calculateEigenvalue(IV), IV.eigenvalues()(1).real(), 1e-8);
+    ASSERT_NEAR(methodIII.calculateEigenvalue(IV), IV.eigenvalues()(1).real(), 1e-6);
 }
 }
 }

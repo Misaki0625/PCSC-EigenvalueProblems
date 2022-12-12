@@ -17,10 +17,9 @@ protected:
     // You can remove any or all of the following functions if their bodies would
     // be empty.
 
-    InversePowerMethodShiftedTest() : methodI(10000, 1e-8, "default"),
-                                      methodII(10000, 1e-8, "15"),
-                                      methodIII(10000, 1e-8, "0"),
-                                      methodIV(10000, 1e-8, "-10"){
+    InversePowerMethodShiftedTest() : methodI(10000, 1e-8, 15),
+                                      methodII(10000, 1e-8, 0),
+                                      methodIII(10000, 1e-8, -10){
         // You can do set-up work for each test here.
     }
 
@@ -46,7 +45,6 @@ protected:
     InversePowerMethodWithShift<double> methodI;
     InversePowerMethodWithShift<double> methodII;
     InversePowerMethodWithShift<double> methodIII;
-    InversePowerMethodWithShift<double> methodIV;
 };
 
 TEST_F(InversePowerMethodShiftedTest, noImplementedMethod) {
@@ -63,7 +61,7 @@ TEST_F(InversePowerMethodShiftedTest, computeLargestEigenvalue) {
     II << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodII.calculateEigenvalue(II), II.eigenvalues()(0).real(), 1e-6);
+    ASSERT_NEAR(methodI.calculateEigenvalue(II), II.eigenvalues()(0).real(), 1e-6);
 }
 
 TEST_F(InversePowerMethodShiftedTest, computeMiddleEigenvalue) {
@@ -71,7 +69,7 @@ TEST_F(InversePowerMethodShiftedTest, computeMiddleEigenvalue) {
     III << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodIII.calculateEigenvalue(III), III.eigenvalues()(2).real(), 1e-6);
+    ASSERT_NEAR(methodII.calculateEigenvalue(III), III.eigenvalues()(2).real(), 1e-6);
 }
 
 TEST_F(InversePowerMethodShiftedTest, computeSmallestEigenvalue) {
@@ -79,7 +77,7 @@ TEST_F(InversePowerMethodShiftedTest, computeSmallestEigenvalue) {
     IV << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodIV.calculateEigenvalue(IV), IV.eigenvalues()(1).real(), 1e-6);
+    ASSERT_NEAR(methodIII.calculateEigenvalue(IV), IV.eigenvalues()(1).real(), 1e-6);
 }
 }
 }
