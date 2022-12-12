@@ -49,20 +49,20 @@ protected:
 
 TEST_F(PowerMethodTestDouble, constantMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
-    ASSERT_NEAR(powerMethod.calculateEigenvalue(I), 3, 1e-8);
+    ASSERT_NEAR(powerMethod.calculateEigenvalue(I), 3, 1e-6);
 
 }
 // Tests that the Foo::Bar() method does Abc.
 TEST_F(PowerMethodTestDouble, unitMatrix) {
     MatrixXd II = Eigen::MatrixXd::Identity(3, 3);
-    ASSERT_NEAR(powerMethod.calculateEigenvalue(II), 1, 1e-8);
+    ASSERT_NEAR(powerMethod.calculateEigenvalue(II), 1, 1e-6);
 }
 
 TEST_F(PowerMethodTestDouble, selfAdjointMatrix) {
     MatrixXd III(2,2);
     III << 1,2,
            2,3;
-    ASSERT_NEAR(powerMethod.calculateEigenvalue(III), III.eigenvalues().cwiseAbs().maxCoeff(), 1e-8);
+    ASSERT_NEAR(powerMethod.calculateEigenvalue(III), III.eigenvalues().cwiseAbs().maxCoeff(), 1e-6);
 }
 
 // add more module to test convergence.
@@ -104,8 +104,8 @@ TEST_F(PowerMethodTestComplex, constantMatrix) {
     MatrixXcd I = Eigen::MatrixXcd::Constant(3,3,1);
     auto real = std::complex<double>{3, 0};
     auto compute = powerMethod.calculateEigenvalue(I);
-    ASSERT_NEAR(compute.real(), real.real(), 1e-8);
-    ASSERT_NEAR(compute.imag(), real.imag(), 1e-8);
+    ASSERT_NEAR(compute.real(), real.real(), 1e-6);
+    ASSERT_NEAR(compute.imag(), real.imag(), 1e-6);
 }
 
 TEST_F(PowerMethodTestComplex, selfAdjointMatrix) {
@@ -114,8 +114,8 @@ TEST_F(PowerMethodTestComplex, selfAdjointMatrix) {
           2,4;
     auto real = std::complex<double>{5, 0};
     auto compute = powerMethod.calculateEigenvalue(II);
-    ASSERT_NEAR(compute.real(), real.real(), 1e-8);
-    ASSERT_NEAR(compute.imag(), real.imag(), 1e-8);
+    ASSERT_NEAR(compute.real(), real.real(), 1e-6);
+    ASSERT_NEAR(compute.imag(), real.imag(), 1e-6);
 }
 
 TEST_F(PowerMethodTestComplex, simpleComplexMatrix) {

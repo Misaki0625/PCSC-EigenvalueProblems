@@ -246,13 +246,15 @@ bool in_array(const std::string &value, const std::vector<std::string> &array)
     return std::find(array.begin(), array.end(), value) != array.end();
 }
 
-void computeDouble(const std::string &file,
-                   const std::string &algo,
-                   int MaxIter,
-                   double tol,
-                   const std::string &shift,
-                   const std::string &outfile) {
-    auto reader = createReader<double>(file);
+template <typename ScalarType>
+void computeEigenValues(ScalarType initShift,
+                        const std::string &file,
+                        const std::string &algo,
+                        int MaxIter,
+                        double tol,
+                        const std::string &shift,
+                        const std::string &outfile) {
+    auto reader = createReader<ScalarType>(file);
     if (reader == nullptr) {
         std::cerr << "Invalid file type" << std::endl;
         throw std::invalid_argument("Please provide a csv or binary file");
@@ -260,67 +262,14 @@ void computeDouble(const std::string &file,
     auto matrix = reader->read(file);
     Configs::printMatrix(matrix);
 
-    double shiftDouble;
+    ScalarType shift_;
     if (shift == "default") {
-        shiftDouble = matrix.diagonal().mean();
+        shift_ = matrix.diagonal().mean();
     } else {
-        shiftDouble = stod(shift);
+        shift_ = initShift;
     }
 
-    auto solver = createMethod<double>(algo, MaxIter, tol, shiftDouble);
-    if (solver == nullptr) {
-        throw std::invalid_argument("Invalid algorithm type");
-    }
-
-    std::vector<std::string> sAlgo {"p", "ip", "ps", "ips"};
-    std::vector<std::string> aAlgo {"qr", "pa"};
-
-    if (in_array(algo, sAlgo)) {
-        cout << "** This algorithm is to compute a single eigenvalue **"<< endl;
-        auto output = solver->calculateEigenvalue(matrix);
-        Configs::printOutputScalar(output);
-        if (identifyFileType(outfile)!="csv"){
-            throw std::invalid_argument( "Output file must be CSV file! ");
-        } else {
-            value2csv(output, outfile);
-        }
-    } else if (in_array(algo, aAlgo)) {
-        cout << "** This algorithm is to compute all eigenvalues **"<< endl;
-        auto output = solver->calculateEigenvalues(matrix);
-        Configs::printOutputVector(output);
-        if (identifyFileType(outfile)!="csv"){
-            throw std::invalid_argument( "Output file must be CSV file! ");
-        } else {
-            vec2csv(output, outfile);
-        }
-    }
-
-    VectorXcd eigenvaluestrue = matrix.eigenvalues();
-    cout << "real" << eigenvaluestrue << endl;
-}
-
-void computeComplex(const std::string &file,
-                    const std::string &algo,
-                    int MaxIter,
-                    double tol,
-                    const std::string &shift,
-                    const std::string &outfile) {
-    auto reader = createReader<std::complex<double>>(file);
-    if (reader == nullptr) {
-        std::cerr << "Invalid file type" << std::endl;
-        throw std::invalid_argument("Please provide a csv or binary file");
-    }
-    auto matrix = reader->read(file);
-    Configs::printMatrix(matrix);
-
-    std::complex<double> shiftComplex;
-    if (shift == "default") {
-        shiftComplex = matrix.diagonal().mean();
-    } else {
-        shiftComplex = std::complex<double>(stod(shift),0.0);
-    }
-
-    auto solver = createMethod<std::complex<double>>(algo, MaxIter, tol, shiftComplex);
+    auto solver = createMethod<ScalarType>(algo, MaxIter, tol, shift_);
     if (solver == nullptr) {
         throw std::invalid_argument("Invalid algorithm type");
     }
@@ -347,13 +296,10 @@ void computeComplex(const std::string &file,
         } else {
             vec2csv(output, outfile);
         }
+    } else {
+        throw std::invalid_argument("Invalid algorithm! ");
     }
-
-    VectorXcd eigenvaluestrue = matrix.eigenvalues();
-    cout << "real" << eigenvaluestrue << endl;
 }
-
-
 
 int main(int argc, char **argv){
 //    using ScalarType = std::complex<double>;
@@ -386,9 +332,21 @@ int main(int argc, char **argv){
 
     // FileReader<double> reader = createReader(file);
     if (scalar == "double") {
-        computeDouble(file, algo, MaxIter, tol, shift, outfile);
+        double initShiftDouble;
+        if (shift != "default") {
+            initShiftDouble = stod(shift);
+        } else {
+            initShiftDouble = 0.0;
+        }
+        computeEigenValues(initShiftDouble, file, algo, MaxIter, tol, shift, outfile);
     } else if(scalar == "complex") {
-        computeComplex(file, algo, MaxIter, tol, shift, outfile);
+        std::complex<double> initShiftComplex;
+        if (shift != "default") {
+            initShiftComplex = std::complex<double>(stod(shift), 0.0);
+        } else {
+            initShiftComplex = std::complex<double>(0.0, 0.0);
+        }
+        computeEigenValues(initShiftComplex, file, algo, MaxIter, tol, shift, outfile);
     }
 
     Configs::printWriteFile(outfile);
