@@ -70,43 +70,6 @@ private:
 };
 
 // Class to print the configuration of the method.
-class ConfigPrinter {
-public:
-    ConfigPrinter(std::map<std::string, std::any>  config)
-            : config_(std::move(config)) {}
-
-    void print() {
-        std::cout << "Algorithm configuration:" << std::endl;
-        for (const auto& [key, value] : config_) {
-            std::cout << key << ": " << std::any_cast<std::string>(value) << std::endl;
-        }
-    }
-
-private:
-    std::map<std::string, std::any> config_;
-};
-
-class Config1
-{
-public:
-    // Constructor to initialize the member variables
-    Config1(const std::string& str, int num1, double num2)
-            : str(str), num1(num1), num2(num2) {}
-
-    // Function to print the values of the member variables
-    void print()
-    {
-        std::cout << "String: " << str << std::endl;
-        std::cout << "Int: " << num1 << std::endl;
-        std::cout << "Double: " << num2 << std::endl;
-    }
-
-private:
-    std::string str;
-    int num1;
-    double num2;
-};
-
 struct Config
 {
     std::string file;
@@ -260,10 +223,16 @@ void vec2csv(const Eigen::Vector<ScalarType, -1>& vec, const std::string& filena
     file.close();
 }
 template <typename ScalarType>
-void double2csv(ScalarType value, const std::string& filename)
+void value2csv(ScalarType value, const std::string& filename)
 {
     // Open the CSV file for writing
     std::ofstream file(filename, std::ios::out | std::ios::app);
+
+    if (!file.is_open())
+    {
+        std::cerr << "Error: could not open file '" << filename << "' for writing." << std::endl;
+        return;
+    }
 
     // Write the double value to the file
     file << value << std::endl;
@@ -285,8 +254,7 @@ void computeDouble(const std::string &file,
                    const std::string &outfile) {
     auto reader = createReader<double>(file);
     if (reader == nullptr) {
-        std::cout << "Invalid file type" << std::endl;
-        std::cout << "Please provide a csv or binary file" << std::endl;
+        std::cerr << "Invalid file type" << std::endl;
         throw std::invalid_argument("Please provide a csv or binary file");
     }
     auto matrix = reader->read(file);
@@ -307,17 +275,16 @@ void computeDouble(const std::string &file,
     std::vector<std::string> sAlgo {"p", "ip", "ps", "ips"};
     std::vector<std::string> aAlgo {"qr", "pa"};
 
-    if (in_array(algo, sAlgo))
-    {
+    if (in_array(algo, sAlgo)) {
         cout << "** This algorithm is to compute a single eigenvalue **"<< endl;
         auto output = solver->calculateEigenvalue(matrix);
         Configs::printOutputScalar(output);
         if (identifyFileType(outfile)!="csv"){
             throw std::invalid_argument( "Output file must be CSV file! ");
         } else {
-            double2csv(output, outfile);
+            value2csv(output, outfile);
         }
-    } else if (in_array(algo, aAlgo)){
+    } else if (in_array(algo, aAlgo)) {
         cout << "** This algorithm is to compute all eigenvalues **"<< endl;
         auto output = solver->calculateEigenvalues(matrix);
         Configs::printOutputVector(output);
@@ -340,8 +307,7 @@ void computeComplex(const std::string &file,
                     const std::string &outfile) {
     auto reader = createReader<std::complex<double>>(file);
     if (reader == nullptr) {
-        std::cout << "Invalid file type" << std::endl;
-        std::cout << "Please provide a csv or binary file" << std::endl;
+        std::cerr << "Invalid file type" << std::endl;
         throw std::invalid_argument("Please provide a csv or binary file");
     }
     auto matrix = reader->read(file);
@@ -370,7 +336,7 @@ void computeComplex(const std::string &file,
         if (identifyFileType(outfile)!="csv"){
             throw std::invalid_argument( "Output file must be CSV file! ");
         } else {
-            double2csv(output, outfile);
+            value2csv(output, outfile);
         }
     } else if (in_array(algo, aAlgo)){
         cout << "** This algorithm is to compute all eigenvalues **"<< endl;
@@ -425,73 +391,7 @@ int main(int argc, char **argv){
         computeComplex(file, algo, MaxIter, tol, shift, outfile);
     }
 
-//    auto reader = createReader<ScalarType>(file);
-//    if (reader == nullptr) {
-//        std::cout << "Invalid file type" << std::endl;
-//        std::cout << "Please provide a csv or binary file" << std::endl;
-//        return 1;
-//    }
-//    auto matrix = reader->read(file);
-//    Configs::printMatrix(matrix);
-//
-//    auto solver = createMethod<ScalarType>(algo, MaxIter, tol, shift);
-//    if (solver == nullptr) {
-//        std::cout << "Invalid algorithm type" << std::endl;
-//        return 1;
-//    }
-//
-//    // a configuration print need to be written as a function/class
-//
-//    std::vector<std::string> sAlgo {"p", "ip", "ps", "ips"};
-//    std::vector<std::string> aAlgo {"qr", "pa"};
-//
-//    if (in_array(algo, sAlgo))
-//    {
-//        cout << "** This algorithm is to compute a single eigenvalue **"<< endl;
-//        auto output = solver->calculateEigenvalue(matrix);
-//        Configs::printOutputScalar(output);
-//        if (identifyFileType(outfile)!="csv"){
-//            throw std::invalid_argument( "Output file must be CSV file! ");
-//        } else {
-//            double2csv(output, outfile);
-//            Configs::printWriteFile(outfile);
-//        }
-//    } else if (in_array(algo, aAlgo)){
-//        cout << "** This algorithm is to compute all eigenvalues **"<< endl;
-//        auto output = solver->calculateEigenvalues(matrix);
-//        Configs::printOutputVector(output);
-//        if (identifyFileType(outfile)!="csv"){
-//            throw std::invalid_argument( "Output file must be CSV file! ");
-//        } else {
-//            vec2csv(output, outfile);
-//            Configs::printWriteFile(outfile);
-//        }
-//    }
     Configs::printWriteFile(outfile);
-
-//    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
-//    MatrixType p = MatrixType::Random(3, 3);
-//    cout << p << endl;
-
-    // use template? guess not
-    // test if eigenvalues can be returned successfully
-
-    // real eigenvalues computed by Eigen library
-//    VectorXcd eigenvaluestrue = matrix.eigenvalues();
-//    cout << "real" << eigenvaluestrue << endl;
-//    cout << "largest: " << eigenvaluestrue.cwiseAbs().maxCoeff() << endl;
-//    cout << "smallest: " << eigenvaluestrue.cwiseAbs().minCoeff() << endl;
-//    auto k = eigenvaluestrue.cwiseAbs();
-//
-//    if (abs(matrix.determinant()) > 1e-8) //
-//    {
-//        cout << "The matrix is invertible" << endl;
-//    } else{
-//        cout << "Not Invertible" << endl;
-//    };
-
-//    delete solver;
-//    solver = nullptr;
 
 // Define a 3x3 matrix
     Eigen::Matrix3d m;
