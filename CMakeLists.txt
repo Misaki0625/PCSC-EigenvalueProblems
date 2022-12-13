@@ -5,7 +5,7 @@ project (PCSC-project)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+# find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 #add_library(pcsc
 #        src/pcsc.cc
