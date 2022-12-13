@@ -125,6 +125,7 @@
 #include <list>
 #include <map>
 #include <any>
+#include <memory>
 #include <Eigen/Dense>
 #include <typeinfo>
 #include <cmath>
