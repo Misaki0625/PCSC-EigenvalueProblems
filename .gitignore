@@ -1,6 +1,7 @@
 step-*.csv
 build
 cmake-build-*
+doxygen_doc
 starting_point
 *~
 .idea
