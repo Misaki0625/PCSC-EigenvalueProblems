@@ -20,7 +20,8 @@ protected:
     /**
      * Constructor and destructor.
      */
-    InversePowerMethodTestDouble(): method(1000, 1e-8) {
+    InversePowerMethodTestDouble(): methodI(10, 1e-8),
+                                    methodII(1000, 1e-8) {
         MaxIter = 1000;
         tol = 1e-8;
     }
@@ -37,19 +38,20 @@ protected:
     // Class members declared here
     int MaxIter;
     double tol;
-    InversePowerMethod<double> method;
+    InversePowerMethod<double> methodI;
+    InversePowerMethod<double> methodII;
 };
 
 TEST_F(InversePowerMethodTestDouble, invalidMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
-    ASSERT_THROW(method.calculateEigenvalue(I), std::invalid_argument);
+    ASSERT_THROW(methodI.calculateEigenvalue(I), std::invalid_argument);
     }
 
 TEST_F(InversePowerMethodTestDouble, noConvergence) {
     Matrix2d II;
     II << 1,2,
           2,1;
-    ASSERT_THROW(method.calculateEigenvalue(II), std::runtime_error);
+    ASSERT_THROW(methodI.calculateEigenvalue(II), std::runtime_error);
 }
 
 TEST_F(InversePowerMethodTestDouble, simpleDoubleMatrix) {
@@ -58,7 +60,7 @@ TEST_F(InversePowerMethodTestDouble, simpleDoubleMatrix) {
     4,5,6,
     7,8,10;
     double real = III.eigenvalues().cwiseAbs().minCoeff();
-    ASSERT_NEAR(method.calculateEigenvalue(III), real, 1e-5);
+    ASSERT_NEAR(methodII.calculateEigenvalue(III), real, 1e-5);
 }
 
 /**
