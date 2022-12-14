@@ -9,39 +9,32 @@ using namespace std;
 using namespace Eigen;
 
 namespace my::project {
-    namespace {
+namespace {
 
-// The fixture for testing class Foo.
+/**
+ * This is a fixture class for inverse power method using double matrices
+ */
 class InversePowerMethodTestDouble : public ::testing::Test {
 protected:
-    // You can remove any or all of the following functions if their bodies would
-    // be empty.
 
+    /**
+     * Constructor and destructor.
+     */
     InversePowerMethodTestDouble(): method(1000, 1e-8) {
-        // You can do set-up work for each test here.
         MaxIter = 1000;
         tol = 1e-8;
     }
 
     ~InversePowerMethodTestDouble() override {
-        // You can do clean-up work that doesn't throw exceptions here.
     }
 
-//     If the constructor and destructor are not enough for setting up
-//     and cleaning up each test, you can define the following methods:
-
     void SetUp() override {
-        // Code here will be called immediately after the constructor (right
-        // before each test).
     }
 
     void TearDown() override {
-        // Code here will be called immediately after each test (right
-        // before the destructor).
     }
 
-    // Class members declared here can be used by all tests in the test suite
-    // for Foo.
+    // Class members declared here
     int MaxIter;
     double tol;
     InversePowerMethod<double> method;
@@ -68,37 +61,30 @@ TEST_F(InversePowerMethodTestDouble, simpleDoubleMatrix) {
     ASSERT_NEAR(method.calculateEigenvalue(III), real, 1e-5);
 }
 
-// add more module to test convergence.
+/**
+ * This is a fixture class for inverse power method using complex matrices
+ */
 class InversePowerMethodTestComplex : public ::testing::Test {
 protected:
-    // You can remove any or all of the following functions if their bodies would
-    // be empty.
 
+    /**
+     * Constructor and destructor.
+     */
     InversePowerMethodTestComplex(): method(10000, 1e-5) {
-        // You can do set-up work for each test here.
         MaxIter = 10000;
         tol = 1e-5;
     }
 
     ~InversePowerMethodTestComplex() override {
-        // You can do clean-up work that doesn't throw exceptions here.
     }
 
-//     If the constructor and destructor are not enough for setting up
-//     and cleaning up each test, you can define the following methods:
-
     void SetUp() override {
-        // Code here will be called immediately after the constructor (right
-        // before each test).
     }
 
     void TearDown() override {
-        // Code here will be called immediately after each test (right
-        // before the destructor).
     }
 
-    // Class members declared here can be used by all tests in the test suite
-    // for Foo.
+    // Class members declared here
     int MaxIter;
     double tol;
     InversePowerMethod<std::complex<double>> method;
@@ -121,7 +107,3 @@ TEST_F(InversePowerMethodTestComplex, simpleComplexMatrix) {
 }
 }
 }
-//int main(int argc, char **argv) {
-//    ::testing::InitGoogleTest(&argc, argv);
-//    return RUN_ALL_TESTS();
-//}

@@ -1,8 +1,6 @@
 //
 // Created by suo on 09.12.22.
 //
-# include <cmath>
-# include <exception>
 # include <gtest/gtest.h>
 # include <Eigen/Dense>
 # include "../src/PowerMethod.h"
@@ -13,35 +11,28 @@ using namespace Eigen;
 namespace my::project {
 namespace {
 
-// The fixture for testing class Foo.
+/**
+ * This is a fixture class for power method using double matrices
+ */
 class PowerMethodTestDouble : public ::testing::Test {
 protected:
-    // You can remove any or all of the following functions if their bodies would
-    // be empty.
 
+    /**
+     * Constructor and destructor.
+     */
     PowerMethodTestDouble(): MaxIter(1000), tol(1e-8), powerMethod(MaxIter, tol) {
-        // You can do set-up work for each test here.
     }
 
     ~PowerMethodTestDouble() override {
-        // You can do clean-up work that doesn't throw exceptions here.
     }
 
-//     If the constructor and destructor are not enough for setting up
-//     and cleaning up each test, you can define the following methods:
-
     void SetUp() override {
-        // Code here will be called immediately after the constructor (right
-        // before each test).
     }
 
     void TearDown() override {
-        // Code here will be called immediately after each test (right
-        // before the destructor).
     }
 
-    // Class members declared here can be used by all tests in the test suite
-    // for Foo.
+    // Class members declared here
     int MaxIter;
     double tol;
     PowerMethod<double> powerMethod;
@@ -52,7 +43,7 @@ TEST_F(PowerMethodTestDouble, constantMatrix) {
     ASSERT_NEAR(powerMethod.calculateEigenvalue(I), 3, 1e-6);
 
 }
-// Tests that the Foo::Bar() method does Abc.
+
 TEST_F(PowerMethodTestDouble, unitMatrix) {
     MatrixXd II = Eigen::MatrixXd::Identity(3, 3);
     ASSERT_NEAR(powerMethod.calculateEigenvalue(II), 1, 1e-6);
@@ -65,42 +56,34 @@ TEST_F(PowerMethodTestDouble, selfAdjointMatrix) {
     ASSERT_NEAR(powerMethod.calculateEigenvalue(III), III.eigenvalues().cwiseAbs().maxCoeff(), 1e-6);
 }
 
-// add more module to test convergence.
+/**
+ * This is a fixture class for power method using complex matrices
+ */
 class PowerMethodTestComplex : public ::testing::Test {
 protected:
-    // You can remove any or all of the following functions if their bodies would
-    // be empty.
 
+    /**
+     * Constructor and destructor.
+     */
     PowerMethodTestComplex(): MaxIter(10000), tol(1e-8), powerMethod(MaxIter, tol) {
-        // You can do set-up work for each test here.
     }
 
     ~PowerMethodTestComplex() override {
-        // You can do clean-up work that doesn't throw exceptions here.
     }
 
-//     If the constructor and destructor are not enough for setting up
-//     and cleaning up each test, you can define the following methods:
-
     void SetUp() override {
-        // Code here will be called immediately after the constructor (right
-        // before each test).
     }
 
     void TearDown() override {
-        // Code here will be called immediately after each test (right
-        // before the destructor).
     }
 
-    // Class members declared here can be used by all tests in the test suite
-    // for Foo.
+    // Class members declared here
     int MaxIter;
     double tol;
     PowerMethod<std::complex<double>> powerMethod;
 };
 
 TEST_F(PowerMethodTestComplex, constantMatrix) {
-    // auto I = Eigen::Matrix<std::complex<double>, -1, -1>::Constant(3, 3, 1);
     MatrixXcd I = Eigen::MatrixXcd::Constant(3,3,1);
     auto real = std::complex<double>{3, 0};
     auto compute = powerMethod.calculateEigenvalue(I);

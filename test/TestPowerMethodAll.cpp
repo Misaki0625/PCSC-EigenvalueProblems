@@ -11,35 +11,28 @@ using namespace Eigen;
 namespace my::project {
 namespace {
 
-// The fixture for testing class Foo.
+/**
+ * This is a fixture class for power method to compute all eigenvalues.
+ */
 class PowerMethodAllTest : public ::testing::Test {
 protected:
-    // You can remove any or all of the following functions if their bodies would
-    // be empty.
 
+    /**
+     * Constructor and destructor.
+     */
     PowerMethodAllTest() :  method(10000, 1e-8) {
-        // You can do set-up work for each test here.
     }
 
     ~PowerMethodAllTest() override {
-        // You can do clean-up work that doesn't throw exceptions here.
     }
 
-//     If the constructor and destructor are not enough for setting up
-//     and cleaning up each test, you can define the following methods:
-
     void SetUp() override {
-        // Code here will be called immediately after the constructor (right
-        // before each test).
     }
 
     void TearDown() override {
-        // Code here will be called immediately after each test (right
-        // before the destructor).
     }
 
-    // Class members declared here can be used by all tests in the test suite
-    // for Foo.
+    // Class members declared here
     PowerMethodAll<double> method;
 };
 

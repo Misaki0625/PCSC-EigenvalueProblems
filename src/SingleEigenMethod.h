@@ -11,16 +11,30 @@
 using namespace std;
 using namespace Eigen;
 
-// Inverse power method for calculating eigenvalues
+/**
+ * SingleEigenMethod is a virtual class inheriting from GeneralEigenMethod, from which all classes inherited are used
+ * to compute one eigenvalue of a given matrix.
+ * It has two functions, calculateEigenvalues and calculateEigenvalue, in which only the latter one is implemented.
+ */
 template <typename ScalarType>
 class SingleEigenMethod : public GeneralEigenMethod<ScalarType>{
+
+    /**
+     * declare MatrixType and VectorType using template ScalarType for internal use.
+     */
     using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
     using VectorType = Eigen::Vector<ScalarType, -1>;
 public:
-    SingleEigenMethod() = default;
 
+    /**
+    * Constructor and destructor.
+    */
+    SingleEigenMethod() = default;
     virtual ~SingleEigenMethod() = default;
 
+    /**
+     * virtual inherited function.
+     */
     virtual ScalarType calculateEigenvalue(const MatrixType &matrix) = 0;
 };
 

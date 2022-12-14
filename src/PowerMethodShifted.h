@@ -13,31 +13,55 @@
 using namespace std;
 using namespace Eigen;
 
-
+/**
+ * PowerMethodWithShift is the implementation of power method with shift.
+ * It uses shift as an initial guess of one eigenvalue, and finds the closest eigenvalue.
+ * Unfortunately, this algorithm has issues to compute the correct value for complex matrices.
+ * This class inherits from SingleEigenMethod and overwrites the calculateEigenvalue function.
+ */
 template <typename ScalarType>
 class PowerMethodWithShift : public SingleEigenMethod<ScalarType> {
 public:
+
+    /**
+     * declare MatrixType and VectorType using template ScalarType for internal use.
+     */
     using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
     using VectorType = Eigen::Vector<ScalarType, -1>;
+
+    /**
+     * Constructor and destructor.
+     */
     PowerMethodWithShift(int MaxIter, double tol, ScalarType shift) : MaxIter_(MaxIter), tol_(tol), shift_(shift) {}
     ~PowerMethodWithShift() override = default;
 
+    /**
+     * calculateEigenvalues function is not implemented.
+     */
     VectorType calculateEigenvalues(const MatrixType& matrix) override {
         throw std::logic_error("Method not implemented");
     }
-    ScalarType calculateEigenvalue(const MatrixType& matrix) override {
-        // VectorXd eigenvalues;
-        MatrixType A = matrix;
-        // ScalarType shift;
 
+    /**
+     * calculateEigenvalue function is implemented to compute one eigenvalue closest to shift.
+     * Normally, it starts with a random initial eigenvector and iteratively compute the new eigenvalue and eigenvector
+     * until the maximum iteration. Tolerance is used to make sure convergence is achieved at the last iteration.
+     */
+    ScalarType calculateEigenvalue(const MatrixType& matrix) override {
+        // Read the matrix and its row
+        MatrixType A = matrix;
         int n = A.rows();
+
         // Initialize the eigenvector with random values
         VectorType x = VectorType::Random(n);
 
         // Initialize the eigenvalue to zero
         ScalarType lambda = 0;
+
+        // Declare the iteration
         int i;
 
+        // Compute the shifted matrix
         MatrixType B = A - shift_ * MatrixType::Identity(A.rows(), A.cols());
 
         // Iterate until convergence or max iterations reached
@@ -45,15 +69,15 @@ public:
         {
             // Compute the next approximation of the eigenvector
             x = B.lu().solve(x);
-            // x = B * x;
+
+            // Normalize the eigenvector
             x.normalize();
 
             // Compute the matrix-vector product Ax
             VectorType Ax = A * x;
 
-            // Compute the eigenvalue as the maximum value of the vector
+            // Compute the new eigenvalue
             ScalarType newLambda = x.transpose() * Ax;
-            // double newLambda = (A * x).norm() / x.norm();
 
             // Check for convergence
             if (abs(newLambda - lambda) < tol_)
@@ -64,32 +88,17 @@ public:
             lambda = newLambda;
         }
 
+        // No convergence condition
         if (i == MaxIter_){
             throw std::runtime_error("Convergence not achieved");
         }
+
         return lambda;
     }
 private:
     int MaxIter_;
     double tol_;
     ScalarType shift_;
-    static ScalarType computeShift(const MatrixType& matrix)
-    {
-        // Compute the average of the diagonal elements of A
-        // as an initial estimate of the shift
-        ScalarType shift = matrix.diagonal().mean();
-        return shift;
-    };
-    static ScalarType convertShift(const std::string& str)
-    {
-        ScalarType shift;
-        if (std::is_same<ScalarType, double>::value) {
-            shift = stod(str);
-        } else if (std::is_same<ScalarType, std::complex<double>>::value) {
-            std::complex<double> shift(stod(str), 0.0);
-        }
-        return shift;
-    }
 };
 
 #endif //PCSC_PROJECT_POWERMETHODSHIFTED_H

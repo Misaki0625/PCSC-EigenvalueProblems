@@ -4,10 +4,3 @@
 
 #include "ReadFiles.h"
 
-//FileReader::FileReader() {
-//
-//}
-//
-//FileReader::~FileReader() {
-//
-//}

@@ -5,12 +5,6 @@ project (PCSC-project)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# find_package (Eigen3 3.3 REQUIRED NO_MODULE)
-
-#add_library(pcsc
-#        src/pcsc.cc
-#        )
-
 add_subdirectory(googletest)
 include_directories(eigen)
 
@@ -26,8 +20,6 @@ add_executable(main
         src/InversePowerMethodShifted.cpp
         src/PowerMethodAll.cpp
         src/QRMethod.cpp)
-
-add_executable(matrix src/matrix.cpp)
 
 aux_source_directory(test test_source)
 add_executable(test_pcsc ${test_source})

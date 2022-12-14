@@ -11,37 +11,29 @@ using namespace Eigen;
 namespace my::project {
 namespace {
 
-// The fixture for testing class Foo.
+/**
+ * This is a fixture class for inverse power method with shift.
+ */
 class InversePowerMethodShiftedTest : public ::testing::Test {
 protected:
-    // You can remove any or all of the following functions if their bodies would
-    // be empty.
-
+    /**
+     * Constructor and destructor.
+     */
     InversePowerMethodShiftedTest() : methodI(10000, 1e-8, 15),
                                       methodII(10000, 1e-8, 0),
                                       methodIII(10000, 1e-8, -10){
-        // You can do set-up work for each test here.
     }
 
     ~InversePowerMethodShiftedTest() override {
-        // You can do clean-up work that doesn't throw exceptions here.
     }
 
-//     If the constructor and destructor are not enough for setting up
-//     and cleaning up each test, you can define the following methods:
-
     void SetUp() override {
-        // Code here will be called immediately after the constructor (right
-        // before each test).
     }
 
     void TearDown() override {
-        // Code here will be called immediately after each test (right
-        // before the destructor).
     }
 
-    // Class members declared here can be used by all tests in the test suite
-    // for Foo.
+    // Class members declared here
     InversePowerMethodWithShift<double> methodI;
     InversePowerMethodWithShift<double> methodII;
     InversePowerMethodWithShift<double> methodIII;

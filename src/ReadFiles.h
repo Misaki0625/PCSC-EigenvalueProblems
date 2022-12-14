@@ -12,102 +12,125 @@
 #include <vector>
 #include <sys/stat.h>
 
-// Base class for file readers
+/**
+ * FileReader is a virtual class, where all implemented reader are inherited.
+ * It has one virtual function called read, which is override by CSVReader and BinaryReader.
+ */
 template <typename ScalarType>
 class FileReader {
 public:
+
+    /**
+     * declare MatrixType using template ScalarType for internal use.
+     */
     using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
 
+    /**
+     * Constructor and destructor.
+     */
     FileReader() = default;
     virtual ~FileReader() = default;
 
+    /**
+     * virtual function read.
+     */
     virtual MatrixType read(const std::string& filename) = 0;
 };
 
-// CSV file reader class
+/**
+ * CSVReader is an inherited class of FileReader.
+ * It overrides the read function to read square matrices from a csv file.
+ * This reader only accepts double numbers in the file, and reads them into a double Eigen matrix
+ * or complex matrix without imaginary parts. In each row, the elements are separated by ','.
+ */
 template <typename ScalarType>
 class CSVReader : public FileReader<ScalarType> {
 public:
+
+    /**
+     * declare MatrixType and VectorType using template ScalarType for internal use.
+     */
     using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
     using RowVectorType = Eigen::RowVector<ScalarType, -1>;
 
+    /**
+     * Constructor and destructor.
+     */
     CSVReader() = default;
     ~CSVReader() override = default;
 
+    /**
+     * read function is implemented to read a Eigen matrix from csv files.
+     */
     MatrixType read(const std::string& filename) override {
         std::ifstream file(filename);
         MatrixType matrix;
         std::string line;
 
-        if (!file.is_open())
-        {
+        if (!file.is_open()) {
             std::cerr << "Error: Could not open file " << filename << "!" << std::endl;
             return {};
         }
 
-        while (std::getline(file, line))
-        {
-            // Parse line
+        while (std::getline(file, line)) {
             std::stringstream lineStream(line);
             std::string cell;
             std::vector<ScalarType> values;
-            while (std::getline(lineStream, cell, ','))
-            {
+            while (std::getline(lineStream, cell, ',')) {
                 values.push_back(std::stod(cell));
             }
-
-            // Add row to matrix
-            if (matrix.rows() == 0)
-            {
+            if (matrix.rows() == 0) {
                 matrix.resize(1, values.size());
-            }
-            else
-            {
+            } else {
                 matrix.conservativeResize(matrix.rows() + 1, Eigen::NoChange);
             }
             matrix.row(matrix.rows() - 1) = Eigen::Map<RowVectorType>(values.data(), values.size());
         }
 
-        // Close file
         file.close();
-
-        // Print matrix
-        // std::cout << matrix << std::endl;
 
         return matrix;
     }
 };
 
-// Binary file reader class
+/**
+ * BinaryReader is an inherited class of FileReader.
+ * It overrides the read function to read square matrices from a binary file.
+ * This reader is able to read double and complex matrices. When writing Eigen matrices to binary file, one should use
+ * "ios::binary" option, which is compatible with this function.
+ */
 template <typename ScalarType>
 class BinaryReader : public FileReader<ScalarType> {
 public:
-    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
-    // using VectorType = Eigen::Vector<ScalarType, -1>;
 
+    /**
+     * declare MatrixType using template ScalarType for internal use.
+     */
+    using MatrixType = Eigen::Matrix<ScalarType, -1, -1>;
+
+    /**
+     * Constructor and destructor.
+     */
     BinaryReader() = default;
     ~BinaryReader() override = default;
 
+    /**
+     * read function is implemented to read a Eigen matrix from binary files.
+     */
     MatrixType read(const std::string &filename) override {
         MatrixType matrix;
         std::ifstream file(filename, std::ios::binary);
         if (!file.is_open()) {
             std::cerr << "Error: Could not open file " << filename << "!" << std::endl;
-            return {}; // to modify
+            return {};
         }
         struct stat stat_buf{};
         int rc = stat(filename.c_str(), &stat_buf);
-        if (rc!=0){
+        if (rc!=0) {
             std::cerr << "Error: Could not read the stat of " << filename << "!" << std::endl;
             return {};
         }
         auto num_elems = stat_buf.st_size / sizeof(ScalarType);
-
-        // int num_elems = 0;
-//        double elem;
-//        while (file.read((char *) &elem, sizeof(double))) {
-//            num_elems++;
-//        }
         int rows = (int) sqrt(num_elems);
         int cols = num_elems / rows;
         matrix.resize(rows, cols);
@@ -115,17 +138,12 @@ public:
         file.seekg(0, std::ios::beg);
         file.read((char *) matrix.data(), rows * cols * sizeof(ScalarType));
 
-        // Close file
         file.close();
 
-        // Print matrix
-        // std::cout << matrix << std::endl;
-
-        // Return matrix
         return matrix;
-
     }
 };
+
 // write a matrix into a binary file
 //    Eigen::MatrixXd a(3, 3);
 //    a << 1, 2, 4,
