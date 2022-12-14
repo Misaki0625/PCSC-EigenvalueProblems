@@ -38,17 +38,26 @@ protected:
     PowerMethod<double> powerMethod;
 };
 
+/**
+ * Compute the dominant eigenvalue given a constant double matrix.
+ */
 TEST_F(PowerMethodTestDouble, constantMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
     ASSERT_NEAR(powerMethod.calculateEigenvalue(I), 3, 1e-5);
 
 }
 
+/**
+ * Compute the dominant eigenvalue given an identity double matrix.
+ */
 TEST_F(PowerMethodTestDouble, unitMatrix) {
     MatrixXd II = Eigen::MatrixXd::Identity(3, 3);
     ASSERT_NEAR(powerMethod.calculateEigenvalue(II), 1, 1e-5);
 }
 
+/**
+ * Compute the dominant eigenvalue given a self adjoint double matrix.
+ */
 TEST_F(PowerMethodTestDouble, selfAdjointMatrix) {
     MatrixXd III(2,2);
     III << 1,2,
@@ -83,6 +92,9 @@ protected:
     PowerMethod<std::complex<double>> powerMethod;
 };
 
+/**
+ * Compute the dominant eigenvalue given a complex constant matrix.
+ */
 TEST_F(PowerMethodTestComplex, constantMatrix) {
     MatrixXcd I = Eigen::MatrixXcd::Constant(3,3,1);
     auto real = std::complex<double>{3, 0};
@@ -91,6 +103,9 @@ TEST_F(PowerMethodTestComplex, constantMatrix) {
     ASSERT_NEAR(compute.imag(), real.imag(), 1e-5);
 }
 
+/**
+ * Compute the dominant eigenvalue given a self adjoint complex matrix.
+ */
 TEST_F(PowerMethodTestComplex, selfAdjointMatrix) {
     MatrixXcd II(2,2);
     II << 1,2,
@@ -101,6 +116,9 @@ TEST_F(PowerMethodTestComplex, selfAdjointMatrix) {
     ASSERT_NEAR(compute.imag(), real.imag(), 1e-5);
 }
 
+/**
+ * Compute the dominant eigenvalue given a simple complex matrix with imaginary parts.
+ */
 TEST_F(PowerMethodTestComplex, simpleComplexMatrix) {
     MatrixXcd III(2,2);
     III(0,0) = std::complex<double>(1.0, 1.0);

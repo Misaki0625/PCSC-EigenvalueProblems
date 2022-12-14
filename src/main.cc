@@ -1,121 +1,67 @@
 /**
- * \mainpage EigenValueProblem Solver
+ * \mainpage EigenValueProblem
  *
  * \tableofcontents
  *
- * \section intro Introduction
  *
- * This code aims at solving eigenvalue problems of the form \f$Ax=\lambda x\f$,
- * where \f$A\in \mathbb{C}^{n\times n}\f$, \f$x \in \mathbb{C}^n\f$ and \f$\lambda \in \mathbb{C}\f$
- * (The vector space can also be \f$\mathbb{Z}\f$ or \f$\mathbb{R}\f$).
- *
- * The code uses the following libraries:
- * - Eigen 3.4.0 (<a href="https://eigen.tuxfamily.org/index.php?title=Main_Page">Link</a>).
- * - GoogleTest 1.11.0 (<a href="https://github.com/google/googletest">Link</a>).
- *
- * 5 classes have been implemented to solve this problem in 4 different algorithms:
- * - PowerMethod: Solves the eigenvalue problem using the standard power method (see section \ref power_method).
- * - ShiftedPowerMethod: Solves the eigenvalue problem using the shifted power method (see section \ref shifted_power_method).
- * - InversePowerMethod: Solves the eigenvalue problem using the inverse power method (see section \ref inverse_power_method).
- * - ShiftedInversePowerMethod: Solves the eigenvalue problem using the shifted inverse power method (see section \ref shifted_inverse_power_method).
- * - QRMethod: Solves the eigenvalue problem using the QR method (see section \ref qr_method).
- *
- * More details can be found on the algorithms used in the detailed description of the classes.
- *
- * ===
- *
- * \section solvers Solvers
- *
- * An abstraction of an eigenvalue solver is implemented under the GeneralEigenSolver class.
- * All solvers inherit (directly or indirectly) from this class. This class is templated such that any type of scalar can be used,
- * as long as Eigen::Matrix<ScalarType,-1,-1> can be called.
- *
- * Two attributes are initialized with this class:
- * - The maximum number of iterations.
- * - The matrix \f$A\f$ from which we wish to extract the eigenvalues.
- *
- * Then 2 types of daughter classes inherit from GeneralEigenSolver:
- * - GeneralPowerMethod for the power methods and its variants (see the next section \ref general_power_method).
- * - QRMethod (see section \ref qr_method).
- *
- * ===
- *
- * \subsection general_power_method Power Method and Variants
- *
- * An abstraction of a solver using the power method is implemented under the GeneralPowerMethod class.
- * All variants of the power method inherit from this class.
- *
- * Two attributes are initialized with this class:
- * - The threshold for the power method. (GeneralPowerMethod#mThreshold)
- * - The starting vector for the power method. After solving, this variable becomes the corresponding eigenvector.  (GeneralPowerMethod#mEigenVector)
- *
- * Two methods are also implemented in this class:
- * - GeneralPowerMethod#solve(MatrixType<ScalarType>& A) which solves an eigenvalue problem using the power method.
- * - GeneralPowerMethod#initRandomEigenVector() which randomly initialize the starting vector.
- *
- * The variants then use solve(MatrixType<ScalarType>& A) with different matrices depending on the desired algorithm.
- *
- * Then 4 daughter classes inherit from GeneralPowerMethod:
- * - PowerMethod, the standard power method. Computes the highest eigenvalue, in absolute value (see section \ref power_method).
- * - ShiftedPowerMethod, the shifted power method. (see \ref shifted_power_method).
- * - InversePowerMethod. Computes the smallest eigenvalue, in absolute value (see section \ref inverse_power_method).
- * - ShiftedInversePowerMethod. Computes the closest eigenvalue to some shift \f$\sigma\f$ (see section \ref shifted_inverse_power_method).
+ * \section introduction Introduction
+ * This programme is concerned with several methods to compute eigenvalues and eigenvectors for a matrix.
+ * Basically, For a matrix A, it aims at finding all scalars λ such that \f$Ax=\lambda x\f$.
+ * All methods for computing eigenvalues and eigenvectors are iterative in nature, except for very small matrices.
  *
  * ---
  *
- * \subsubsection power_method Power Method
- *
- * The PowerMethod class implements the standard power method.
- * Given a matrix \f$A \in \mathbb{C}^{n\times n}\f$ with eigenvalues
- * \f$|\lambda_1| \ge |\lambda_2| \ge \cdots \ge |\lambda_n|\f$, then the returned eigenvalue is \f$\lambda_1\f$.
- * This will not be the case if the starting vector is in the null space of \f$A\f$ or an eigenvector of \f$A\f$.
- *
- *  * \subsubsection shifted_power_method Shifted Power Method
- *
- * The ShiftedPowerMethod class implements the shifted power method.
- * Given a matrix \f$A \in \mathbb{C}^{n\times n}\f$ with eigenvalues
- * \f$|\lambda_1| \ge |\lambda_2| \ge \cdots \ge |\lambda_n|\f$, then the returned eigenvalue is \f$\lambda_i\f$
- * such that \f$|\lambda_i - \sigma \f$ is maximal.
- * This will not be the case if the starting vector is in the null space of \f$A\f$ or an eigenvector of \f$A\f$.
+ * \section methods Methods
+ * Five methods are implemented to solve the eigenvalue problem.
+ * - Power method
+ * - Inverse power method
+ * - Power method with shift
+ * - Inverse power method with shift
+ * - QR method
  *
  * ---
  *
- * \subsubsection inverse_power_method Inverse Power Method
+ * \subsection power_method Power method
+ * The power method tries to determine the largest magnitude eigenvalue, and the corresponding eigenvector,
+ * of a matrix, by computing (scaled) vectors in the sequence:
+ * \f$x^{(k+1)}=A x^{(k)}\f$
+ * This algorithm is applicable for double and complex matrices, and it can be modified to compute all eigenvalues at once.
+ * But it has the limitation to compute for the complex matrices in this programme.
  *
- * The InversePowerMethod class implements the inverse power method algorithm.
- * Given a matrix \f$A \in \mathbb{C}^{n\times n}\f$ with eigenvalues
- * \f$|\lambda_1| \ge |\lambda_2| \ge \cdots \ge |\lambda_n|\f$, then the returned eigenvalue is \f$\lambda_n\f$.
- * This will not be the case if the starting vector is in the null space of \f$A\f$ or an eigenvector of \f$A\f$.
+ * \subsection inverse_power_method Inverse power method
+ * The inverse power method reverses the iteration step of the power method, written as:
+ * \f$A x^{(k+1)}=x^{(k)}\f$
+ * It is similar to a power method iteration for the matrix \f$A^{-1}\f$.
+ * So this process will often converge to the eigenvector associated with the largest eigenvalue of \f$A^{-1}\f$,
+ * which is the smallest eigenvalue of A in magnitude. In order to ensure the invertibility of the matrix,
+ * its determinant cannot be 0.
  *
- * This class assumes that \f$A\f$ is invertible.
+ * \subsection power_method_with_shift Power method with shift
+ * A major limitation of the power method was that it can only find the eigenvalue of largest magnitude.
+ * However, using shifting allows us to focus the attention of the power method on
+ * seeking the eigenvalue closest to any particular value we care to name. Besides, it can accelerate the convergence
+ * process by providing a good shift.
+ *
+ * \subsection inverse_power_method_with_shift Inverse power method with shift
+ * Similar to power method, to release the limitation of the inverse power method, the shifting is used to
+ * find a closet eigenvalue we care.
+ *
+ * \subsection qr_method QR method
+ * QR method is the most efficient method for computing all the eigenvalues at once. it constructs its QR factorization
+ *  and update the matrix as the multiplication of R and Q.
  *
  * ---
  *
- * \subsubsection shifted_inverse_power_method Shifted Inverse Power Method
+ * \section convergence Convergence
+ * Generally, convergence is a difficult subject and fought with special cases and exceptions to rules.
+ * Throughout this programme a very simple convergence criterion is used to stop the iteration steps, that is to compare
+ * the difference of the newly computed eigenvalue and the old one. If the difference is smaller than the tolerance, then
+ *  the convergence is achieved at the current iteration.
  *
- * The ShiftedInversePowerMethod class implements the inverse power method algorithm.
- * Given a matrix \f$A \in \mathbb{C}^{n\times n}\f$ with eigenvalues
- * \f$|\lambda_1| \ge |\lambda_2| \ge \cdots \ge |\lambda_n|\f$,
- * then the returned eigenvalue is the one closest to some shift (ShiftedInversePowerMethod#mShift).
- * This will not be the case if the starting vector is in the null space of \f$A\f$ or an eigenvector of \f$A\f$.
+ * ---
  *
- * Here, the shift parameter, ShiftedInversePowerMethod#mShift, must be initialized before calling ShiftedInversePowerMethod#solve().
- *
- * ===
- *
- *  \subsection qr_method QR Method
- *
- *  The QRMethod class implements a solver using the QR method.
- *  In order for the algorithm to retrieve the correct eigenvalues,
- *  the matrix \f$A\f$ must real and not complex.
- *
- *  The QRMethod#solveAll() method returns a Eigen::Vector<ScalarType> containing the eigenvalues in descending order.
- *  It is also possible to retrieve specific eigenvalues using QRMethod#solve(int n) and QRMethod#solve().
- *  The former will retrieve the n-th largest eigenvalue while the latter the largest one.
- *
- *  Here, special care should be taken in choosing the GeneralEigenSolver#mMaxIter attribute,
- *  as the algorithm \b will iterate this number of times.
- *
+ * \section read_write_files Read and write files
+ * This programme supports reading Eigen matrix from csv and binary files.
  */
 
 #include <iostream>
@@ -528,7 +474,7 @@ int main(int argc, char **argv){
         throw std::invalid_argument("Complex scalar type not supported by this algorithm");
     }
 
-    // Determine the shift
+    // Determine the scalar type and solve the problem
     if (scalar == "double") {
         double initShiftDouble;
         if (shift != "default") {

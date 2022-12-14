@@ -38,10 +38,16 @@ protected:
     QRMethod<double> method;
 };
 
+/**
+ * When calling the unimplemented function, throw a logic error.
+ */
 TEST_F(QRMethodTestDouble, noImplementedMethod) {
     ASSERT_THROW(method.calculateEigenvalue(MatrixXd::Identity(3, 3)), std::logic_error);
 }
 
+/**
+ * Compute all the eigenvalues given a constant double matrix.
+ */
 TEST_F(QRMethodTestDouble, constantMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
     Vector3d real;
@@ -50,6 +56,9 @@ TEST_F(QRMethodTestDouble, constantMatrix) {
     ASSERT_NEAR((compute-real).norm(), 0, 1e-5);
 }
 
+/**
+ * Compute all the eigenvalues given a simple double matrix.
+ */
 TEST_F(QRMethodTestDouble, simpleDoubleMatrix) {
     MatrixXd II(3,3);
     II << 1,2,3,
@@ -87,6 +96,9 @@ protected:
     QRMethod<std::complex<double>> method;
 };
 
+/**
+ * Compute all the eigenvalues given a simple complex matrix with imaginary parts.
+ */
 TEST_F(QRMethodTestComplex, simpleComplexMatrix) {
     MatrixXcd I(2,2);
     I(0,0) = std::complex<double>(1.0, 1.0);
@@ -99,6 +111,5 @@ TEST_F(QRMethodTestComplex, simpleComplexMatrix) {
     VectorXcd compute = method.calculateEigenvalues(I);
     ASSERT_NEAR((compute-real).norm(), 0, 1e-5);
 }
-
 }
 }

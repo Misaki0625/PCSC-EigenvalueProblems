@@ -39,15 +39,24 @@ protected:
     InversePowerMethodWithShift<double> methodIII;
 };
 
+/**
+ * When calling the unimplemented function, throw a logic error.
+ */
 TEST_F(InversePowerMethodShiftedTest, noImplementedMethod) {
     ASSERT_THROW(methodI.calculateEigenvalues(MatrixXd::Identity(3, 3)), std::logic_error);
 }
 
+/**
+ * Input an irreversible matrix, and throw an invalid argument.
+ */
 TEST_F(InversePowerMethodShiftedTest, invalidMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
     ASSERT_THROW(methodI.calculateEigenvalue(I), std::invalid_argument);
 }
 
+/**
+ * Compute the largest eigenvalue given a shift 15.
+ */
 TEST_F(InversePowerMethodShiftedTest, computeLargestEigenvalue) {
     MatrixXd II(3, 3);
     II << 1,2,3,
@@ -56,6 +65,9 @@ TEST_F(InversePowerMethodShiftedTest, computeLargestEigenvalue) {
     ASSERT_NEAR(methodI.calculateEigenvalue(II), II.eigenvalues()(0).real(), 1e-5);
 }
 
+/**
+ * Compute the middle eigenvalue given a shift 0.
+ */
 TEST_F(InversePowerMethodShiftedTest, computeMiddleEigenvalue) {
     MatrixXd III(3, 3);
     III << 1,2,3,
@@ -64,6 +76,9 @@ TEST_F(InversePowerMethodShiftedTest, computeMiddleEigenvalue) {
     ASSERT_NEAR(methodII.calculateEigenvalue(III), III.eigenvalues()(2).real(), 1e-5);
 }
 
+/**
+ * Compute the smallest eigenvalue given a shift -10.
+ */
 TEST_F(InversePowerMethodShiftedTest, computeSmallestEigenvalue) {
     MatrixXd IV(3, 3);
     IV << 1,2,3,

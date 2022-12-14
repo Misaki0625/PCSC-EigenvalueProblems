@@ -37,6 +37,9 @@ protected:
     CSVReader<std::complex<double>> readerII;
 };
 
+/**
+ * Read a double matrix from matrix.csv
+ */
 TEST_F(ReadFileTestCSV, readDoubleMatrix) {
     auto m1 = readerI.read("matrix.csv");
     MatrixXd m2(3,3);
@@ -46,6 +49,9 @@ TEST_F(ReadFileTestCSV, readDoubleMatrix) {
     EXPECT_EQ(m1, m2);
 }
 
+/**
+ * Read a complex matrix (without imaginary parts) from matrix.csv
+ */
 TEST_F(ReadFileTestCSV, readComplexMatrix) {
     auto m1 = readerII.read("matrix.csv");
     MatrixXcd m2(3,3);
@@ -83,12 +89,19 @@ protected:
     BinaryReader<std::complex<double>> readerII;
 };
 
+/**
+ * Read a double matrix from data.bin
+ */
 TEST_F(ReadFileTestBinary, readDoubleMatrix) {
     auto m1 = readerI.read("data.bin");
     MatrixXd m2(3,3);
     m2 << 1,2,4,4,5,6,7,8,10;
     EXPECT_EQ(m1, m2);
 }
+
+/**
+ * Read a complex matrix from data.bin
+ */
 TEST_F(ReadFileTestBinary, readComplexMatrix) {
     auto m1 = readerII.read("data.bin");
     MatrixXcd m2(2,2);
@@ -98,6 +111,5 @@ TEST_F(ReadFileTestBinary, readComplexMatrix) {
     m2(1,1) = std::complex<double>(4.0, 6.0);
     EXPECT_EQ(m1, m2);
 }
-
 }
 }

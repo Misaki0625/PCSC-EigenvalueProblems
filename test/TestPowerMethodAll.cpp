@@ -36,15 +36,24 @@ protected:
     PowerMethodAll<double> method;
 };
 
+/**
+ * When calling the unimplemented function, throw a logic error.
+ */
 TEST_F(PowerMethodAllTest, noImplementedMethod) {
     ASSERT_THROW(method.calculateEigenvalue(MatrixXd::Identity(3, 3)), std::logic_error);
 }
 
+/**
+ * Input an irreversible matrix, and throw an invalid argument.
+ */
 TEST_F(PowerMethodAllTest, invalidMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
     ASSERT_THROW(method.calculateEigenvalues(I), std::invalid_argument);
 }
 
+/**
+ * Compute all eigenvalues given a simple double matrix.
+ */
 TEST_F(PowerMethodAllTest, computeAllEigenvalue) {
     MatrixXd II(3, 3);
     II << 1,2,3,

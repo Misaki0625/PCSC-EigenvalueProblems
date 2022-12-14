@@ -42,11 +42,17 @@ protected:
     InversePowerMethod<double> methodII;
 };
 
+/**
+ * Input an irreversible matrix, and throw an invalid argument.
+ */
 TEST_F(InversePowerMethodTestDouble, invalidMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
     ASSERT_THROW(methodI.calculateEigenvalue(I), std::invalid_argument);
     }
 
+/**
+ * When no convergence is achieved, and throw an runtime error.
+ */
 TEST_F(InversePowerMethodTestDouble, noConvergence) {
     Matrix3d II;
     II << 1.1,2,3,
@@ -55,6 +61,9 @@ TEST_F(InversePowerMethodTestDouble, noConvergence) {
     ASSERT_THROW(methodI.calculateEigenvalue(II), std::runtime_error);
 }
 
+/**
+ * Compute the smallest eigenvalue given a simple double matrix.
+ */
 TEST_F(InversePowerMethodTestDouble, simpleDoubleMatrix) {
     Matrix3d III;
     III << 1,2,3,
@@ -93,11 +102,17 @@ protected:
     InversePowerMethod<std::complex<double>> method;
 };
 
+/**
+ * Input an irreversible matrix, and throw an invalid argument.
+ */
 TEST_F(InversePowerMethodTestComplex, invalidMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
     ASSERT_THROW(method.calculateEigenvalue(I), std::invalid_argument);
 }
 
+/**
+ * Compute the smallest eigenvalue given a simple complex matrix.
+ */
 TEST_F(InversePowerMethodTestComplex, simpleComplexMatrix) {
     MatrixXcd II(2,2);
     II(0,0) = std::complex<double>(1.0, 1.0);
