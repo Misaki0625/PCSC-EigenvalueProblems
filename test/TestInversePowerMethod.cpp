@@ -106,7 +106,7 @@ TEST_F(InversePowerMethodTestComplex, simpleComplexMatrix) {
     II(1,1) = std::complex<double>(-1.0, -1.0);
     auto real = II.eigenvalues()(0);
     auto compute = method.calculateEigenvalue(II);
-    ASSERT_NEAR(std::abs(compute-real), 0.0, 1e-6);
+    ASSERT_NEAR(std::abs(compute-real), 0.0, 1e-4);
 }
 }
 }

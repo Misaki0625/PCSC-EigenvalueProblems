@@ -46,7 +46,7 @@ TEST_F(PowerMethodShiftedTest, noImplementedMethod) {
 
 TEST_F(PowerMethodShiftedTest, constantMatrix) {
     MatrixXd I = Eigen::MatrixXd::Constant(3, 3, 1);
-    ASSERT_NEAR(methodI.calculateEigenvalue(I), 3, 1e-6);
+    ASSERT_NEAR(methodI.calculateEigenvalue(I), 3, 1e-5);
 }
 
 TEST_F(PowerMethodShiftedTest, computeLargestEigenvalue) {
@@ -54,7 +54,7 @@ TEST_F(PowerMethodShiftedTest, computeLargestEigenvalue) {
     II << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodI.calculateEigenvalue(II), II.eigenvalues()(0).real(), 1e-6);
+    ASSERT_NEAR(methodI.calculateEigenvalue(II), II.eigenvalues()(0).real(), 1e-5);
 }
 
 TEST_F(PowerMethodShiftedTest, computeMiddleEigenvalue) {
@@ -62,7 +62,7 @@ TEST_F(PowerMethodShiftedTest, computeMiddleEigenvalue) {
     III << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodII.calculateEigenvalue(III), III.eigenvalues()(2).real(), 1e-6);
+    ASSERT_NEAR(methodII.calculateEigenvalue(III), III.eigenvalues()(2).real(), 1e-5);
 }
 
 TEST_F(PowerMethodShiftedTest, computeSmallestEigenvalue) {
@@ -70,7 +70,7 @@ TEST_F(PowerMethodShiftedTest, computeSmallestEigenvalue) {
     IV << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodIII.calculateEigenvalue(IV), IV.eigenvalues()(1).real(), 1e-6);
+    ASSERT_NEAR(methodIII.calculateEigenvalue(IV), IV.eigenvalues()(1).real(), 1e-5);
 }
 }
 }

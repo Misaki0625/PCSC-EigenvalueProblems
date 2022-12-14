@@ -53,7 +53,7 @@ TEST_F(InversePowerMethodShiftedTest, computeLargestEigenvalue) {
     II << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodI.calculateEigenvalue(II), II.eigenvalues()(0).real(), 1e-6);
+    ASSERT_NEAR(methodI.calculateEigenvalue(II), II.eigenvalues()(0).real(), 1e-5);
 }
 
 TEST_F(InversePowerMethodShiftedTest, computeMiddleEigenvalue) {
@@ -61,7 +61,7 @@ TEST_F(InversePowerMethodShiftedTest, computeMiddleEigenvalue) {
     III << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodII.calculateEigenvalue(III), III.eigenvalues()(2).real(), 1e-6);
+    ASSERT_NEAR(methodII.calculateEigenvalue(III), III.eigenvalues()(2).real(), 1e-5);
 }
 
 TEST_F(InversePowerMethodShiftedTest, computeSmallestEigenvalue) {
@@ -69,7 +69,7 @@ TEST_F(InversePowerMethodShiftedTest, computeSmallestEigenvalue) {
     IV << 1,2,3,
             4,5,6,
             7,8,10;
-    ASSERT_NEAR(methodIII.calculateEigenvalue(IV), IV.eigenvalues()(1).real(), 1e-6);
+    ASSERT_NEAR(methodIII.calculateEigenvalue(IV), IV.eigenvalues()(1).real(), 1e-5);
 }
 }
 }

@@ -52,7 +52,7 @@ TEST_F(PowerMethodAllTest, computeAllEigenvalue) {
           7,8,10;
     VectorXcd real = II.eigenvalues();
     VectorXcd compute = method.calculateEigenvalues(II);
-    ASSERT_NEAR((compute-real).norm(), 0, 1e-8);
+    ASSERT_NEAR((compute-real).norm(), 0, 1e-5);
 }
 
 }
