@@ -48,9 +48,10 @@ TEST_F(InversePowerMethodTestDouble, invalidMatrix) {
     }
 
 TEST_F(InversePowerMethodTestDouble, noConvergence) {
-    Matrix2d II;
-    II << 1,2,
-          2,1;
+    Matrix3d II;
+    II << 1,2,3,
+          2,1,3,
+          4,5,2;
     ASSERT_THROW(methodI.calculateEigenvalue(II), std::runtime_error);
 }
 
