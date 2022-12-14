@@ -55,6 +55,9 @@ public:
             Eigen::HouseholderQR<MatrixType> qr(A);
             MatrixType Q = qr.householderQ();
             MatrixType R = qr.matrixQR().template triangularView<Eigen::Upper>();
+
+            // Update matrix
+            A = R * Q;
         }
 
         // Extract eigenvalues from diagonal of A
