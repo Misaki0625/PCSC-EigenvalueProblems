@@ -20,7 +20,7 @@ protected:
     /**
      * Constructor and destructor.
      */
-    InversePowerMethodTestDouble(): methodI(10, 1e-8),
+    InversePowerMethodTestDouble(): methodI(1, 1e-8),
                                     methodII(1000, 1e-8) {
         MaxIter = 1000;
         tol = 1e-8;
