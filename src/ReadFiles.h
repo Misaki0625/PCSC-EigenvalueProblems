@@ -144,15 +144,4 @@ public:
     }
 };
 
-// write a matrix into a binary file
-//    Eigen::MatrixXd a(3, 3);
-//    a << 1, 2, 4,
-//    4, 5, 6,
-//    7, 8, 10;
-//
-//    // Write matrix to binary file
-//    ofstream out("data.bin", ios::binary);
-//    out.write((char*)a.data(), a.size()*sizeof(double));
-//    out.close();
-
 #endif //PCSC_PROJECT_PREADFILES_H
