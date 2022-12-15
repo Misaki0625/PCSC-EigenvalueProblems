@@ -489,6 +489,8 @@ int main(int argc, char **argv){
             initShiftComplex = std::complex<double>(0.0, 0.0);
         }
         computeEigenValues(initShiftComplex, file, algo, MaxIter, tol, shift, outfile);
+    } else {
+        throw std::invalid_argument("Invalid scalar type! ");
     }
     Configs::printWriteFile(outfile);
 
