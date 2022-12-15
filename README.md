@@ -193,5 +193,6 @@ The issues of this programme are but not limited to:
 
 - Some methods are not supporting both scalar types. The algorithms should be improved to incorporate various matrix types.
 - File readers can be improved to support more file types, e.g. txt, webpage etc.
+- Convergence conditions are not well-defined in the mathematical sense.
 - Assertion and error logic is not perfectly fitted in the programme, as it should give more clues of how the users can fix the errors.
 - Time and space efficiency are not strictly analyzed yet.
