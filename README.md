@@ -159,7 +159,7 @@ Follow the instruction in Usage and get more insights on how the programme works
 
 This programme enables the configuration as an input flow from command line, which increases its flexibility and efficiency without recompilation.
 
-Besides, it supports double and complex matrix computation using all methods in template, though, some of methods are not applicable.
+Besides, it supports double and complex matrix computation using all methods in template, though, some of them are not applicable for now.
 The summary of all methods are listed in the table:
 
 |     | double | complex | tolerance | full rank | shift |
