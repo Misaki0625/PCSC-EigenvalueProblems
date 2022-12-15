@@ -23,14 +23,12 @@
  *
  * \subsection power_method Power method
  * The power method tries to determine the largest magnitude eigenvalue, and the corresponding eigenvector,
- * of a matrix, by computing (scaled) vectors in the sequence:
- * \f$x^{(k+1)}=A x^{(k)}\f$
+ * of a matrix, by computing (scaled) vectors in the sequence.
  * This algorithm is applicable for double and complex matrices, and it can be modified to compute all eigenvalues at once.
  * But it has the limitation to compute for the complex matrices in this programme.
  *
  * \subsection inverse_power_method Inverse power method
- * The inverse power method reverses the iteration step of the power method, written as:
- * \f$A x^{(k+1)}=x^{(k)}\f$
+ * The inverse power method reverses the iteration step of the power method.
  * It is similar to a power method iteration for the matrix \f$A^{-1}\f$.
  * So this process will often converge to the eigenvector associated with the largest eigenvalue of \f$A^{-1}\f$,
  * which is the smallest eigenvalue of A in magnitude. In order to ensure the invertibility of the matrix,
