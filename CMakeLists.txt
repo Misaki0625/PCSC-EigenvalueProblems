@@ -25,8 +25,5 @@ aux_source_directory(test test_source)
 add_executable(test_pcsc ${test_source})
 target_link_libraries(test_pcsc gtest_main gtest pthread)
 
-# add_custom_target(test ./test_pcsc DEPENDS test_pcsc)
-
 file(COPY src/matrix.csv DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY src/data.bin DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-#file(COPY src/output.csv DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

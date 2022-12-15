@@ -84,7 +84,7 @@ out.close();
 Note that data in two files are different (the third element).
 
 ## Usage
-The idea of this programme is to through command line to control the inputs of algorithms.
+The idea of this programme is to control the inputs of algorithms through command line.
 There are 7 options available from arguments.
 ### -f
 `-f` option is the filename that tells the programme which input file to read data from. It is a mandatory option. If no 
@@ -106,7 +106,7 @@ power method with shift, and inverse power method with shift.
 
 This is an optional argument. When no value is given, it will use `qr` by default.
 ### -o
-`-o` passes the output file name to the programme. It is an optional choice, when no file is given, the programme will create an output.csv to save the results.
+`-o` passes the output file name to the programme. It is an optional choice, when no file is given, the programme will create an output.csv in the build folder to save the results.
 
 ### -MaxIter
 `-MaxIter` gives an integer number for the maximum iteration of eigenvalue computation. It is optional, and default value is 10000.
@@ -138,17 +138,21 @@ The computed eigenvalues are
 0.198247
 ------------------------------------------------------------
 ```
-Except the results, the configuration, matrix and output message will be printed.
+Except the results, the configuration, matrix and output message will be printed as well.
 
 For more examples, try:
 
 ```
 ./main -algo p -f matrix.csv -scalar double
 ```
+```
+./main -algo ips -f matrix.csv -scalar double -shift -10
+```
+```
+./main -algo qr -f data.bin -scalar complex
+```
 
-```
-./main -algo ip -f data.bin -scalar complex
-```
+Follow the instruction in Usage and get more insights on how the programme works.
 
 
 ## Features
