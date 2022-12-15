@@ -39,7 +39,7 @@ Note that the documentation is only for the `src` folder. If the user is interes
 the `Doxyfile` file and modify `INPUT` option as `src` and `test`.
 
 ## Test
-To run all the tests at once:
+To run all the tests at once, direct to build folder and in the terminal:
 ```
 ./test_pcsc
 ```
