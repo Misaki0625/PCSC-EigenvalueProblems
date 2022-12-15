@@ -2,6 +2,7 @@ step-*.csv
 build
 cmake-build-*
 doxygen_doc
+.DS_Store
 starting_point
 *~
 .idea
